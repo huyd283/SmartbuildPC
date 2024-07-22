@@ -25,29 +25,18 @@ export default function Filter({ id, onFilterSelected }) {
     onFilterSelected(selectedFilters);
   }, [selectedFilters, onFilterSelected]);
 
-  // const handleCheckboxChange = (filterName, value) => {
-  //   setSelectedFilters((prevState) => {
-  //     const newFilters = prevState.filter(
-  //       (filter) => !filter.hasOwnProperty(filterName)
-  //     );
-  //     newFilters.push({ [filterName]: value });
-  //     console.log(newFilters);
-  //     return newFilters;
-  //   });
-  // };
   const handleCheckboxChange = (filterName, value) => {
-    setSelectedFilters((prevState) => {
-      const newFilters = [...prevState];
-      const index = newFilters.findIndex((filter) => Object.keys(filter)[0] === filterName);
-      if (index !== -1 && newFilters[index][filterName] === value) {
-        newFilters.splice(index, 1);
-      } else {
-        newFilters.push({ [filterName]: value });
+    setSelectedFilters(prevState => {
+      let newFilters = prevState.filter(filter => Object.keys(filter)[0] !== filterName);
+      const isSelected = prevState.some(filter => filter[filterName] === value);
+  
+      if (!isSelected) {
+        newFilters = [...newFilters, { [filterName]: value }];
       }
-      console.log(newFilters);
       return newFilters;
     });
   };
+  
   return (
     <div className="w-full p-4 bg-white dark:bg-zinc-800 border-r max-h-[300px] lg:max-h-[450px] 2xl:max-h-[600px] border-gray-300 px-1.5 overflow-y-scroll">
       <h2 className="font-bold mb-4">Filter products by</h2>
@@ -78,4 +67,5 @@ export default function Filter({ id, onFilterSelected }) {
       </div>
     </div>
   );
+  
 }

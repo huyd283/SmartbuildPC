@@ -14,29 +14,56 @@ export default function ProductItem({
   selectedFilter,
 }) {
   const [Dataproduct, setDataproduct] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Số phần tử mỗi trang
+
   useEffect(() => {
     const fetchData = async () => {
+      const data = {
+        cate_id: id,
+        filters: selectedFilter,
+        smartbuild: []
+      };
       try {
-        const res = await getData(id);
-
+        const res = await getData(data);
         setDataproduct(res.result);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, selectedFilter]);
+
+ const filteredProducts = Dataproduct.filter((item) =>
+    item.productName.toLowerCase().includes(inputValue.toLowerCase())
+  );
 
   const onSelected = (productId) => {
-    toast.success("Choose successful products!");
+    toast.success("Chọn sản phẩm thành công!");
     onProductSelected(productId);
   };
+
   const formatVND = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
-}
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const goToPreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
   return (
     <div className="w-full flex flex-col gap-y-3 max-h-[300px] lg:max-h-[450px] 2xl:max-h-[600px] overflow-y-scroll">
-      {Dataproduct.map((item) => (
+      {currentItems.map((item) => (
         <div key={item.productId} className="w-full flex items-center justify-between float-left border p-4 rounded-sm">
           <Link href={item.href || "#"} className="w-20 h-20 overflow-hidden rounded-md">
             <Image
@@ -69,6 +96,15 @@ export default function ProductItem({
           </div>
         </div>
       ))}
+      <div className="flex justify-between mt-4">
+        <Button className="bg-gray-500 hover:bg-gray-400" onClick={goToPreviousPage} disabled={currentPage === 1}>
+          Previous
+        </Button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <Button className="bg-gray-500 hover:bg-gray-400" onClick={goToNextPage} disabled={currentPage === totalPages}>
+          Next
+        </Button>
+      </div>
     </div>
   );
 }
