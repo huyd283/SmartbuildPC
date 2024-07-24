@@ -52,7 +52,7 @@ export default function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <h2 className="hidden lg:flex gap-2 items-center border rounded-sm p-2 px-4 bg-white cursor-pointer text-sm font-semibold">
-              <LayoutGrid className="h-4 w-4" /> Danh mục sản phẩm
+              <LayoutGrid className="h-4 w-4" />Product portfolio
             </h2>
           </DropdownMenuTrigger>
 
@@ -60,7 +60,7 @@ export default function Header() {
 
         {/* search input */}
         <div className="ml-auto hidden lg:flex ">
-          <SearchInput placeholder="Hôm nay bạn muốn mua gì?" />
+          <SearchInput placeholder="What would you like to buy today?" />
         </div>
 
         {/* account and cart */}
@@ -148,15 +148,11 @@ export default function Header() {
                       </SheetHeader>
                     </SheetContent>
                   </Sheet>
-                  {NavLinkList?.map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex w-full justify-start py-1 font-semibold uppercase text-sm">
-                      <Link className="" href={`/${item?.href}`}>
-                        {item?.name}
-                      </Link>
-                    </li>
-                  ))}
+                  <li className="flex w-full justify-start py-1 font-semibold uppercase text-sm">
+                    <Link className="" href={`/xay-dung-cau-hinh`}>
+                    Build Configuration
+                    </Link>
+                  </li>
                   <li className="flex w-full justify-start py-1 font-semibold uppercase text-sm">
                     <Link className="" href={`/login`}>
                       Account

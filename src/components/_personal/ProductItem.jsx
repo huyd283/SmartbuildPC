@@ -6,23 +6,26 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { getData } from "@/service/Api-service/apiProducts";
 
-export default function ProductItem({ 
+
+export default function ProductItem({
   id,
   onProductSelected,
   selectedSearch,
   inputValue,
   selectedFilter,
+  onProductSelectedId,
 }) {
   const [Dataproduct, setDataproduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Số phần tử mỗi trang
+  const itemsPerPage = 10; 
+
 
   useEffect(() => {
     const fetchData = async () => {
       const data = {
         cate_id: id,
         filters: selectedFilter,
-        smartbuild: []
+        smartbuild: onProductSelectedId
       };
       try {
         const res = await getData(data);
@@ -34,13 +37,28 @@ export default function ProductItem({
     fetchData();
   }, [id, selectedFilter]);
 
- const filteredProducts = Dataproduct.filter((item) =>
+  const applySorting = (products) => {
+    switch (selectedSearch) {
+      case "newest":
+        return products.sort((a, b) => new Date(b.date) - new Date(a.date));
+      case "expensive":
+        return products.sort((a, b) => b.price - a.price);
+      case "cheap":
+        return products.sort((a, b) => a.price - b.price);
+      default:
+        return products;
+    }
+  };
+
+  const filteredProducts = Dataproduct.filter((item) =>
     item.productName.toLowerCase().includes(inputValue.toLowerCase())
   );
 
-  const onSelected = (productId) => {
-    toast.success("Chọn sản phẩm thành công!");
-    onProductSelected(productId);
+  const sortedProducts = applySorting(filteredProducts);
+
+  const onSelected = (product) => {
+    toast.success("Choose a successful product!");
+    onProductSelected(product);
   };
 
   const formatVND = (price) => {
@@ -49,9 +67,9 @@ export default function ProductItem({
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortedProducts.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
 
   const goToPreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));

@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
     />
         <StoreProvider>
           <Header />
-          <Navigation />
+          {/* <Navigation /> */}
           {children}
           <Footer />
           <BackToTop />

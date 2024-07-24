@@ -26,21 +26,23 @@ import {
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import { ProductItem, ProductSelectedItem } from ".";
+import { useSelector } from "react-redux";
 import Filter from "./Filter";
 import toast from "react-hot-toast";
-export default function ConfigItem({ item, onPriceChange, onRefresh , onSelected }) {
+import { setSelectedProduct, removeSelectedProduct } from "@/app/_utils/store/product.slice";
+import { useDispatch } from "react-redux";
+export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected }) {
   const options = [
     { value: "newest", label: "Latest" },
     { value: "expensive", label: "Price high to low" },
     { value: "cheap", label: "Price low to high" },
-    { value: "alphabet", label: "From A -> Z" },
   ];
-
+  const dispatch = useDispatch();
+  const selectedProduct = useSelector((state) => state.product.selectedProductIds);
   const [selectedSearch, setSelectedSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
-
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleProductSelected = (selectedItem) => {
@@ -48,8 +50,8 @@ export default function ConfigItem({ item, onPriceChange, onRefresh , onSelected
     const action = "add";
     onSelected(selectedItem, action);
     onPriceChange(selectedItem?.price, action);
-    console.log(selectedItem);
-    setIsDialogOpen(false); // Đóng popup sau khi chọn sản phẩm
+    dispatch(setSelectedProduct(selectedItem.productId));
+    setIsDialogOpen(false);
   };
 
   const handleFilterSelected = (selectedItem) => {
@@ -61,7 +63,8 @@ export default function ConfigItem({ item, onPriceChange, onRefresh , onSelected
     onSelected(selectedItem, action);
     onPriceChange(selectedItem?.price, action);
     setSelectedItem(null);
-    toast.success("Deleted successfully")
+    dispatch(removeSelectedProduct(selectedItem.productId));
+    toast.success("Deleted successfully");
   };
 
   const handleValueChange = (value) => {
@@ -150,6 +153,7 @@ export default function ConfigItem({ item, onPriceChange, onRefresh , onSelected
                       selectedSearch={selectedSearch}
                       inputValue={inputValue}
                       selectedFilter={selectedFilter}
+                      onProductSelectedId={selectedProduct}
                     />
                   </div>
                 </div>
