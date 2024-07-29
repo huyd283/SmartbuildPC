@@ -1,5 +1,5 @@
 "use client";
-import { CategoryProductItem, SearchInput } from "@/components/_personal";
+import { useRouter } from "next/router";
 import {
   ChevronRight,
   CircleUserRound,
@@ -29,10 +29,51 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useEffect, useState } from "react";
+import "../Header/header.css"
+import { listAllCate } from "@/service/Api-service/apiCategorys";
+
+
 export default function Header() {
   const pathname = usePathname();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchCate, setSearchCate] = useState('');
+  const [listCate, setListCate] = useState([]);
+
   const showHeader =
     pathname === "/login" || pathname === "/admin-login" || pathname === "/create-account" ? false : true;
+
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  useEffect(() => {
+
+    localStorage.removeItem("searchProduct");
+    localStorage.removeItem("searchCate");
+  }, []);
+
+  useEffect(() => {
+    const allCate = async () => {
+      const response = await listAllCate();
+      setListCate(response);
+    }
+    allCate();
+  }, [])
+
+
+  useEffect(() => {
+    localStorage.setItem("searchCate", searchCate)
+
+  }, [searchCate])
+
+  const searchProduct = (event) => {
+    event.preventDefault();
+    window.location.href = `/productSearch?query=${searchQuery}`;
+    // localStorage.setItem("searchProduct", searchQuery)
+    // setSearchValue(searchQuery);
+
+  }
+  console.log(listCate)
   return (
     <header className={`${!showHeader && "hidden"} w-full bg-[#026db5]`}>
       <div className="flex container items-center justify-between py-2 xl:py-4 gap-x-4">
@@ -45,7 +86,6 @@ export default function Header() {
             alt="logo"
             className="w-[200px] h-full max-h-20 xl:w-[260px] bg-cover bg-center"
           />}
-
         </Link>
 
         {/* Category Product */}
@@ -58,30 +98,93 @@ export default function Header() {
 
         </DropdownMenu>
 
+        <div style={{ display: 'none', marginTop: '1px' }} className="homepage-slider-2019 absolute">
+          <div className="homepage-slider-left">
+            <ul className="ul ul_menu_2019 boxshadowx2023" id="menu-2019">
+              {listCate?.result?.map(item => (
+                <li
+                  id="vt-1106"
+                  className="js-hover-menu li-catcha-menu"
+                >
+                  <Link href={`/productSearch?searchCate=${item.categoryId}`} className="root">
+                    {item.categoryName}
+                  </Link>
+                  <span className="arrow-li-catcha-menu" />
+                </li>
+              ))}
+
+
+            </ul>
+          </div>
+        </div>
+
+
+
         {/* search input */}
-        <div className="ml-auto hidden lg:flex ">
-          <SearchInput placeholder="What would you like to buy today?" />
+        <div style={{ width: '40%' }} className="ml-auto hidden lg:flex ">
+          <form style={{ width: '100%' }} onSubmit={searchProduct}>
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                value={searchProduct ?? ''}
+                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="What do you want..."
+                required=""
+                onChange={handleInputChange}
+              />
+              <button
+                type="submit"
+                className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+
         </div>
 
         {/* account and cart */}
         <div className="flex items-center gap-x-4 ml-8">
-        <Link
-          className="lg:flex flex-col items-center px-3 gap-y-1 hidden group"
-          href="/login"
-        >
-          <CircleUserRound color="#ffffff" size={32} />
-          <span className="text-[13px] font-medium text-white w-full text-center">
-            Account
-          </span>
-          <div style={{marginTop: '2rem'}} className="absolute bg-white rounded-md shadow-md p-2 mt-4 z-50 hidden group-hover:block">
-            <a href="/login" className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
-              <span>Login</span>
-            </a>
-            <a href="/admin-logout" className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
-              <span>Logout</span>
-            </a>
+          <div
+            className="lg:flex flex-col items-center px-3 gap-y-1 hidden group"
+          >
+            <CircleUserRound color="#ffffff" size={32} />
+            <span className="text-[13px] font-medium text-white w-full text-center">
+              Account
+            </span>
+            <div style={{ marginTop: '2rem' }} className="absolute bg-white rounded-md shadow-md p-2 mt-4 z-50 hidden group-hover:block">
+              <Link href="/login" className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
+                <span>Login</span>
+              </Link>
+              <Link href="/admin-logout" className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
+                <span>Logout</span>
+              </Link>
+            </div>
           </div>
-        </Link>
           <Link
             className="lg:flex flex-col items-center px-3 gap-y-1 hidden"
             href={"/cart"}>
@@ -121,11 +224,7 @@ export default function Header() {
                               <li
                                 className="flex flex-col w-full justify-start items-start py-1 uppercase text-sm gap-y-1"
                                 key={index}>
-                                <Link
-                                  className="font-semibold"
-                                  href={`/danh-muc-san-pham/${item?.href}`}>
-                                  {item?.name}
-                                </Link>
+                                <div className="font-semibold">{item?.name}</div>
 
                                 {item?.categoryList && (
                                   <ul className="w-full flex flex-col">
@@ -150,7 +249,7 @@ export default function Header() {
                   </Sheet>
                   <li className="flex w-full justify-start py-1 font-semibold uppercase text-sm">
                     <Link className="" href={`/xay-dung-cau-hinh`}>
-                    Build Configuration
+                      Build Configuration
                     </Link>
                   </li>
                   <li className="flex w-full justify-start py-1 font-semibold uppercase text-sm">

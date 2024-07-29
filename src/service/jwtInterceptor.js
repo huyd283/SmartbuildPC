@@ -21,7 +21,7 @@ export const jwtInterceptor = (url, options = {}) => {
     }
     const currentUser = authService.currentUser();
     if (currentUser && currentUser.token) {
-      headers['Authorization'] = `Bearer ${currentUser.token}`;
+      headers['Authorization'] = `Bearer ${currentUsergit.token}`;
     }
   }
 

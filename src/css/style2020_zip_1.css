@@ -458,7 +458,7 @@ body{overflow-x:auto}
 #tooltip-category-fixed-left{display:none;position:absolute;left:53px;white-space:nowrap;top:0;padding:7px 9px;border-radius:3px;-moz-border-radius:3px;transition:.5s;background:#ed1b24;color:#fff;z-index:999999}
 #tooltip-category-fixed-left:before{content:'';display:block;width:0;border:5px solid transparent;border-right-color:#d81010;position:absolute;left:-10px;top:8px}
 #tooltip{position:absolute;z-index:9999;background:#fff;border:1px solid #243a76;width:390px;-webkit-box-shadow:0 3px 7px 0 rgba(0,0,0,.25);box-shadow:0 3px 7px 0 rgba(0,0,0,.25);padding-bottom:10px;border-radius:8px;display:none}
-.hover_name{display:block;padding:15px 10px;font-size:15px;overflow:hidden;line-height:18px;background:linear-gradient(to right,#243a76,#ed1b24);color:#fff;word-break:break-word;border-radius:8px 8px 0 0;margin:1px;font-weight:600;text-shadow:0 1px rgba(0,0,0,.25)}
+.hover_name{display:block;padding:15px 10px;font-size:15px;overflow:hidden;line-height:18px;background-color:gray;color:#fff;word-break:break-word;border-radius:8px 8px 0 0;margin:1px;font-weight:600;text-shadow:0 1px rgba(0,0,0,.25)}
 .tooltip-title{display:inline-block;background:#243a76;color:#fff;border-radius:3px;padding:5px 12px;margin-top:10px;margin-bottom:10px;margin-left:10px;line-height:16px}
 .dat-hang,.voucher4,.voucher5{display:block;z-index:22;position:absolute;right:0;top:0}
 #tooltip .hover_brand{padding:5px}

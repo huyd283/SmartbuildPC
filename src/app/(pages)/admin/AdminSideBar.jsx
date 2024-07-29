@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { usePathname } from "next/navigation";
 
 export async function getServerSideProps(context) {
   const { params, query, req } = context
@@ -14,12 +15,14 @@ export async function getServerSideProps(context) {
   }
 }
 export default function AdminSidebar() {
+  const pathname = usePathname();
   const [lastSegment, setActivePath] = useState('/')
-
+  const showHeader =
+    pathname === "/login" || pathname === "/admin-login"  ? false : true;
   function onClickLogout() {}
 
   return (
-    <div>
+    <div className={`${!showHeader && "hidden"} `}>
       <nav className="bg-slate-400 fixed left-0 top-0 flex flex-col h-full px-3 py-4 shadow-md pt-3" style={{ zIndex: 10, width: '256px' }}>
         <div className="mx-auto flex w-full flex-wrap items-center justify-between px-0">
           <div>

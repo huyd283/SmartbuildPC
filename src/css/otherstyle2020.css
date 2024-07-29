@@ -4,7 +4,7 @@
 #tb-account{width:100%;border-collapse:collapse}
 #account-left{width:220px;vertical-align:top;padding-right:30px}
 h2,h3{margin-top:0}
-#account-left a{color:#383838;text-decoration:none;line-height:30px}
+#account-left a{color:white;text-decoration:none;line-height:30px}
 #acount-list-page .content{margin-top:10px}
 #account-menu-top .logged a i,#account-menu-top .logged a img{font-size:18px;color:#adadad;width:25px;text-align:center;margin-right:5px}
 #account-customer-name i{background:#243a76;color:#fff;width:60px;height:60px;line-height:60px;text-align:center;border-radius:50%;font-size:30px;float:left}

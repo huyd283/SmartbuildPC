@@ -17,7 +17,7 @@ export const LoginAdmin = async (data) => {
       return response.json();
     } catch (error) {
       console.error('Error posting data:', error);
-      throw error;
+      return error;
     }
   };
 
@@ -39,7 +39,7 @@ export const LoginAdmin = async (data) => {
         return response.json();
       } catch (error) {
         console.error('Error posting data:', error);
-        throw error;
+        return error;
       }
     };
     

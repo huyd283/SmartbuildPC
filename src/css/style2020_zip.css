@@ -2,6 +2,58 @@ body,button,input,select,textarea{font-family:"Open Sans",Arial,sans-serif}
 .user-action-item,a,button{cursor:pointer}
 .hover_content_pro,.sub_nav{position:absolute;background:#fff}
 .col,img{max-width:100%}
+.cpu-list li {
+  margin-bottom: 8px;
+}
+
+.cpu-list input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+
+
+.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.filter-form select,
+.filter-form input[type="text"],
+.filter-form button {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.filter-form button {
+  background-color: #0044cc;
+  color: white;
+  cursor: pointer;
+}
+
+.filter-form button:hover {
+  background-color: #0033aa;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-button {
+  padding: 8px;
+  border: 1px dashed #ddd;
+  background-color: white;
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  border-color: #aaa;
+}
 .atext1 a:after,.atext1 a:before{animation-duration:1s;animation-iteration-count:infinite;animation-fill-mode:both}
 .border-hover-ttdv a,.border-hover-hotro a,.border-hover-khuyen-mai a,.header-2019 .main-search .select .title,.hotline .sub .item,.store-list-group-2022 .store-list .item{text-overflow:ellipsis;white-space:nowrap}
 body{color:#333e48;font-size:13px;margin:0;padding:0;background:#fff;overflow-x:hidden;overflow-y:auto;min-width:1200px;word-break: break-word;}
@@ -283,7 +335,7 @@ div#footer_bottom-2019 .footer-bottom-title-2019{display:block;text-align:center
 #tooltip-category-fixed-left{display:none;position:absolute;left:53px;white-space:nowrap;top:0;padding:7px 9px;border-radius:3px;-moz-border-radius:3px;transition:.5s;background:#ed1b24;color:#fff;z-index:999999}
 #tooltip-category-fixed-left:before{content:'';display:block;width:0;border:5px solid transparent;border-right-color:#d81010;position:absolute;left:-10px;top:8px}
 #tooltip{position:absolute;z-index:9999;background:#fff;border:1px solid #243a76;width:390px;-webkit-box-shadow:0 3px 7px 0 rgba(0,0,0,.25);box-shadow:0 3px 7px 0 rgba(0,0,0,.25);padding-bottom:10px;border-radius:8px;display:none}
-.hover_name{display:block;padding:15px 10px;font-size:15px;overflow:hidden;line-height:18px;background:linear-gradient(to right,#243a76,#ed1b24);color:#fff;word-break:break-word;border-radius:8px 8px 0 0;margin:1px;font-weight:600;text-shadow:0 1px rgba(0,0,0,.25)}
+.hover_name{display:block;padding:15px 10px;font-size:15px;overflow:hidden;line-height:18px;background-color: #f0f0f4;color:#fff;word-break:break-word;border-radius:8px 8px 0 0;margin:1px;font-weight:600;text-shadow:0 1px rgba(0,0,0,.25)}
 .tooltip-title{display:inline-block;background:#243a76;color:#fff;border-radius:3px;padding:5px 12px;margin-top:10px;margin-bottom:10px;margin-left:10px;line-height:16px}
 .dat-hang,.voucher4,.voucher5{display:block;z-index:22;position:absolute;right:0;top:0}
 
@@ -805,4 +857,77 @@ h2.home-categories-header-title{color:#333e48;line-height:40px;font-size:30px;fo
 .hacom-lists-cate-menu-2023 .item .cat-content .cat-content-btn-buy-now:hover i {
 	background-color: #fff;
   	color: #EC1C24
+}
+
+.tooltip-2019 {
+  width: 300px;
+  height: 400px;
+  background-color: white;
+  color: black;
+z-index: 9999;
+  border: 1px solid #ccc; /* Đường viền nhẹ cho khung */
+  padding: 10px; /* Khoảng cách bên trong khung */
+  box-sizing: border-box; /* Bao gồm padding và border trong kích thước tổng */
+}
+
+.tooltip-2019 a.hover_name {
+  display: block;
+  
+  
+  color: #0073e6; /* Màu chữ của link */
+  text-decoration: none;
+}
+
+.tooltip-2019 table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background-color: white;
+  color: black;
+
+}
+
+.tooltip-2019 td {
+  padding: 5px;
+}
+
+.tooltip-2019 .img_price_full,
+.tooltip-2019 .min_price {
+  font-weight: bold;
+  color: red;
+}
+
+.tooltip-2019 .hover_vat {
+  font-size: 12px;
+  color: #555;
+}
+
+.tooltip-2019 .tooltip-title {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.tooltip-2019 .hover_offer {
+  margin-top: 10px;
+}
+
+.tooltip-2019 .km-title {
+  font-weight: bold;
+  color: #000;
+  margin-top: 5px;
+}
+
+.tooltip-2019 ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tooltip-2019 li {
+  margin-bottom: 5px;
+}
+
+.tooltip-2019 li span {
+  font-weight: bold;
+  color: red;
 }
