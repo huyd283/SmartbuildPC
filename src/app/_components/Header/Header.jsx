@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/router";
 import {
   ChevronRight,
   CircleUserRound,
@@ -32,6 +31,7 @@ import {
 import { useEffect, useState } from "react";
 import "../Header/header.css"
 import { listAllCate } from "@/service/Api-service/apiCategorys";
+import { useRouter } from 'next/router';
 
 
 export default function Header() {
@@ -39,7 +39,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCate, setSearchCate] = useState('');
   const [listCate, setListCate] = useState([]);
-
+  const [currentUser, setCurrentUser] = useState()
   const showHeader =
     pathname === "/login" || pathname === "/admin-login" || pathname === "/create-account" ? false : true;
 
@@ -59,7 +59,9 @@ export default function Header() {
     }
     allCate();
   }, [])
-
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")))
+  },[])
 
   useEffect(() => {
     localStorage.setItem("searchCate", searchCate)
@@ -73,7 +75,13 @@ export default function Header() {
     // setSearchValue(searchQuery);
 
   }
-  console.log(listCate)
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.clear(); 
+    setCurrentUser(null);
+    window.location.href = '/';
+    };
   return (
     <header className={`${!showHeader && "hidden"} w-full bg-[#026db5]`}>
       <div className="flex container items-center justify-between py-2 xl:py-4 gap-x-4">
@@ -180,7 +188,7 @@ export default function Header() {
               <Link href="/login" className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
                 <span>Login</span>
               </Link>
-              <Link href="/admin-logout" className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
+              <Link href="/login" onClick={handleLogout} className="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
                 <span>Logout</span>
               </Link>
             </div>

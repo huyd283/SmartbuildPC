@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -14,27 +15,38 @@ import {
 } from "@/components/ui/alert-dialog";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+
 export default function Cart() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
   const [selectAll, setSelectAll] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const selectedItemStr = Cookies.get("selectedItem");
     if (selectedItemStr) {
       try {
-        const selectedItemArray = JSON.parse(decodeURIComponent(selectedItemStr));
+        const selectedItemArray = JSON.parse(
+          decodeURIComponent(selectedItemStr)
+        );
         setSelectedItems(selectedItemArray);
         console.log(selectedItemArray);
       } catch (e) {
         console.error("Error parsing JSON from cookie:", e);
       }
     }
+
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
   }, []);
 
   const updateCookie = (items) => {
-    Cookies.set("selectedItem", encodeURIComponent(JSON.stringify(items)), { expires: 7 });
+    Cookies.set("selectedItem", encodeURIComponent(JSON.stringify(items)), {
+      expires: 7,
+    });
   };
 
   const handleIncrement = (productId) => {
@@ -79,7 +91,9 @@ export default function Cart() {
   };
 
   const handleConfirmDelete = () => {
-    const updatedItems = selectedItems.filter((item) => item.productId !== currentItem.productId);
+    const updatedItems = selectedItems.filter(
+      (item) => item.productId !== currentItem.productId
+    );
     setSelectedItems(updatedItems);
     updateCookie(updatedItems);
     setIsDialogOpen(false);
@@ -104,6 +118,23 @@ export default function Cart() {
       return item;
     });
     setSelectedItems(updatedItems);
+  };
+
+  const handleProceedToCheckout = () => {
+    if (!currentUser) {
+      toast.error("You need to log in to proceed to checkout.");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } else {
+      const selectedProducts = selectedItems.filter((item) => item.isSelected);
+      if (selectedProducts.length === 0) {
+        toast.error("Product empty");
+      } else {
+        console.log("Selected products:", selectedProducts);
+        // Thực hiện các hành động khác, ví dụ: chuyển đến trang thanh toán
+      }
+    }
   };
 
   return (
@@ -141,7 +172,9 @@ export default function Cart() {
                 />
                 <div className="flex-1">
                   <div className="font-bold">{item.productName}</div>
-                  <div className="text-sm text-zinc-500">Product ID: {item.productId}</div>
+                  <div className="text-sm text-zinc-500">
+                    Product ID: {item.productId}
+                  </div>
                 </div>
                 <div className="text-right">
                   <div className="text-lg font-bold text-red-500">
@@ -149,7 +182,10 @@ export default function Cart() {
                   </div>
                 </div>
                 <div className="flex items-center ml-4">
-                  <button onClick={() => handleDecrement(item.productId)} className="border px-2">
+                  <button
+                    onClick={() => handleDecrement(item.productId)}
+                    className="border px-2"
+                  >
                     -
                   </button>
                   <input
@@ -158,7 +194,10 @@ export default function Cart() {
                     onChange={(e) => handleQuantityChange(e, item.productId)}
                     className="w-12 text-center border-t border-b"
                   />
-                  <button onClick={() => handleIncrement(item.productId)} className="border px-2">
+                  <button
+                    onClick={() => handleIncrement(item.productId)}
+                    className="border px-2"
+                  >
                     +
                   </button>
                 </div>
@@ -176,14 +215,18 @@ export default function Cart() {
                         Are you sure you want to delete this item?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This item will be removed from your cart. Please confirm to proceed.
+                        This item will be removed from your cart. Please confirm
+                        to proceed.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel onClick={handleCancelDelete}>
                         Cancel
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-red-500" onClick={handleConfirmDelete}>
+                      <AlertDialogAction
+                        className="bg-red-500"
+                        onClick={handleConfirmDelete}
+                      >
                         Confirm
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -199,7 +242,10 @@ export default function Cart() {
               <span>Subtotal</span>
               <span>
                 {selectedItems
-                  .reduce((total, item) => total + item.price * item.quantity, 0)
+                  .reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )
                   .toLocaleString()}
                 ₫
               </span>
@@ -208,7 +254,10 @@ export default function Cart() {
               <span>Total</span>
               <span>
                 {selectedItems
-                  .reduce((total, item) => total + item.price * item.quantity, 0)
+                  .reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )
                   .toLocaleString()}
                 ₫
               </span>
@@ -216,7 +265,10 @@ export default function Cart() {
             <div className="text-sm text-zinc-500 mb-4">
               (Includes VAT if applicable)
             </div>
-            <button className="bg-blue-500 text-white w-full py-2">
+            <button
+              onClick={handleProceedToCheckout}
+              className="bg-blue-500 text-white w-full py-2"
+            >
               Proceed to Checkout
             </button>
           </div>

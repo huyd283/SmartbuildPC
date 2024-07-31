@@ -12,16 +12,16 @@ export const jwtInterceptor = (url, options = {}) => {
 
   if (environment.defaultauth === 'firebase') {
     const currentUser = authService.currentUser();
-    if (currentUser && currentUser.token) {
-      headers['Authorization'] = `Bearer ${currentUser.token}`;
+    if (currentUser && currentUser?.tokenInformation?.accessToken) {
+      headers['Authorization'] = `Bearer ${currentUser?.tokenInformation?.accessToken}`;
     }
   } else {
     if (!url.includes('http') && !url.includes('assets')) {
       modifiedUrl = environment.host + url;
     }
     const currentUser = authService.currentUser();
-    if (currentUser && currentUser.token) {
-      headers['Authorization'] = `Bearer ${currentUsergit.token}`;
+    if (currentUser && currentUser?.tokenInformation?.accessToken) {
+      headers['Authorization'] = `Bearer ${currentUser?.tokenInformation?.accessToken}`;
     }
   }
 

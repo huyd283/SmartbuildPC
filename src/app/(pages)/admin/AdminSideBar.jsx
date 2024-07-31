@@ -17,8 +17,7 @@ export async function getServerSideProps(context) {
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [lastSegment, setActivePath] = useState('/')
-  const showHeader =
-    pathname === "/login" || pathname === "/admin-login"  ? false : true;
+  const showHeader = pathname === "/admin-login"  ? false : true;
   function onClickLogout() {}
 
   return (
