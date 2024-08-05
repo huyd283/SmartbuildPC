@@ -19,12 +19,10 @@ import Cookies from 'js-cookie';
 
 export default function BuildConfig() {
   const [configList, setConfigList] = useState([]);
-  
   const [refreshFlag, setRefreshFlag] = useState(false);
-
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState([]);
-  
+
   const handleProductSelected = (item, action) => {
     if (action === 'add') {
       setSelectedItem(prevTotal => [...prevTotal, item]);
@@ -32,32 +30,34 @@ export default function BuildConfig() {
       setSelectedItem(prevTotal => prevTotal.filter(i => i !== item));
     }
   };
-  const handlePriceChange = (price, action) => {
+
+  const handlePriceChange = (price, action, quantityItem = 1) => {
+    if (isNaN(price) || isNaN(quantityItem)) {
+      return;
+    }
     if (action === 'add') {
-      setTotalPrice(prevTotal => prevTotal + price);
+      setTotalPrice(prevTotal => prevTotal + price * quantityItem);
     } else if (action === 'remove') {
-      setTotalPrice(prevTotal => prevTotal - price);
+      setTotalPrice(prevTotal => prevTotal - price * quantityItem);
     }
   };
+
+  const handleQuantityChange = (item, quantity) => {
+    const existingItem = selectedItem.find(i => i.productId === item.productId);
+    if (existingItem) {
+      const newTotalPrice = totalPrice - (existingItem.price * (existingItem.quantity || 1)) + (item.price * quantity);
+      setTotalPrice(newTotalPrice);
+      existingItem.quantity = quantity;
+    }
+    setSelectedItem([...selectedItem]);
+  };
+
   const onRefresh = () => {
     setTotalPrice(0);
     setRefreshFlag((prev) => !prev);
     toast.success("Configuration refresh successful!");
   };
-  // const onOk = () => {
-  //   const updatedItems = selectedItem.map(item => ({
-  //     ...item,
-  //     quantity: item.quantity || 1,
-  //   }));
-  
-  //   console.log(updatedItems);
-    
-  //   const selectedItemStr = JSON.stringify(updatedItems);
-    
-  //   Cookies.set('selectedItem', selectedItemStr, { expires: 7 });
-    
-  //   toast("All products have been added to the cart!");
-  // };
+
   const onOk = () => {
     const existingItemsStr = Cookies.get('selectedItem');
     let existingItems = [];
@@ -73,10 +73,10 @@ export default function BuildConfig() {
     const updatedItems = selectedItem.map(item => {
       const existingItem = existingItems.find(i => i.productId === item.productId);
       if (existingItem) {
-        existingItem.quantity += 1;
+        existingItem.quantity += item.quantity || 1;
         return existingItem;
       } else {
-        return { ...item, quantity: 1 };
+        return { ...item, quantity: item.quantity || 1 };
       }
     });
   
@@ -89,10 +89,11 @@ export default function BuildConfig() {
     Cookies.set('selectedItem', selectedItemStr, { expires: 7 });
     toast.success("All products have been added to the cart!");
   };
-  
+
   const formatCurrency = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
+
   const fetchData = async () => {
     try {
       const res = await getDataCate();
@@ -106,27 +107,27 @@ export default function BuildConfig() {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <div className="container flex flex-col p-5 lg:py-10 gap-y-4">
       <h2 className="text-[#026db5] text-2xl font-bold w-full text-center py-4">
-      Build Configuration PC
+        Build Configuration PC
       </h2>
       <div className="w-full flex flex-col gap-y-4 xl:gap-y-8">
         <div className="flex w-full items-center justify-start">
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button className="bg-red-600 hover:bg-red-500 uppercase">
-              Refresh configuration
+                Refresh configuration
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                Are you sure you want to refresh all configurations?
+                  Are you sure you want to refresh all configurations?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                All configurations you added will be refreshed. Please confirm
-                to complete the operation.
+                  All configurations you added will be refreshed. Please confirm to complete the operation.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -140,36 +141,36 @@ export default function BuildConfig() {
         </div>
         <div className="w-full flex flex-col gap-y-4">
           {configList.map((item, index) => (
-              <ConfigItem
-                item={item}
-                key={index}
-                onPriceChange={handlePriceChange}
-                onRefresh={refreshFlag} 
-                onSelected={handleProductSelected}
-              />
-            ))}
+            <ConfigItem
+              item={item}
+              key={index}
+              onPriceChange={handlePriceChange}
+              onQuantityChange={handleQuantityChange}
+              onRefresh={refreshFlag}
+              onSelected={handleProductSelected}
+            />
+          ))}
         </div>
         <div className="flex flex-col md:flex-row w-full items-center justify-between py-5">
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button className="bg-red-600 hover:bg-red-500 uppercase">
-              Add all to cart
+                Add all to cart
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                Are you sure to add them all?
+                  Are you sure to add them all?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                All products will be added to the cart. Please confirm
-                to complete the operation.
+                  All products will be added to the cart. Please confirm to complete the operation.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction className="bg-blue-500" onClick={onOk}>
-                Agree
+                  Agree
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

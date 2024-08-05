@@ -31,7 +31,8 @@ import Filter from "./Filter";
 import toast from "react-hot-toast";
 import { setSelectedProduct, removeSelectedProduct } from "@/app/_utils/store/product.slice";
 import { useDispatch } from "react-redux";
-export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected }) {
+
+export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected, onQuantityChange }) {
   const options = [
     { value: "newest", label: "Latest" },
     { value: "expensive", label: "Price high to low" },
@@ -42,14 +43,21 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected 
   const [selectedSearch, setSelectedSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [quantityItem, setQuantityItem] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleQuantityChange = (item, quantityItem) => {
+    setQuantityItem(quantityItem)
+    onQuantityChange(item, quantityItem); 
+    onPriceChange();
+  };
 
   const handleProductSelected = (selectedItem) => {
     setSelectedItem(selectedItem);
     const action = "add";
     onSelected(selectedItem, action);
-    onPriceChange(selectedItem?.price, action);
+    onPriceChange(selectedItem?.price, action, quantityItem);
     dispatch(setSelectedProduct(selectedItem.productId));
     setIsDialogOpen(false);
   };
@@ -61,7 +69,7 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected 
   const handleRemove = () => {
     const action = "remove";
     onSelected(selectedItem, action);
-    onPriceChange(selectedItem?.price, action);
+    onPriceChange(selectedItem?.price, action, quantityItem);
     setSelectedItem(null);
     dispatch(removeSelectedProduct(selectedItem.productId));
     toast.success("Deleted successfully");
@@ -165,7 +173,7 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected 
       <CollapsibleContent asChild>
         <div>
           {selectedItem ? (
-            <ProductSelectedItem item={selectedItem} onRemove={handleRemove} />
+            <ProductSelectedItem item={selectedItem} onRemove={handleRemove} onQuantityChange={handleQuantityChange} />
           ) : (
             <div>No product is selected</div>
           )}
