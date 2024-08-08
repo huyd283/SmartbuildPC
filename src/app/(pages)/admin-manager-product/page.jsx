@@ -54,16 +54,16 @@ export default function Product() {
               <th className="px-4 py-2 border border-border">Tên Sản Phẩm</th>
               <th className="px-4 py-2 border border-border">Còn lại</th>
               <th className="px-4 py-2 border border-border">Số tiền</th>
-              <th className="px-4 py-2 border border-border">Trạng thái</th>
-              <th className="px-4 py-2 border border-border">Ngày tạo</th>
+              <th className="px-4 py-2 border border-border">Hãng</th>
+              <th className="px-4 py-2 border border-border">Bảo hành</th>
               <th className="px-4 py-2 border border-border">Quản lý</th>
             </tr>
           </thead>
           <tbody>
             {listData.map((data, index) => (
               <tr key={index}>
-                <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 border">
+                <td className="px-1 py-1 text-center border">{index + 1}</td>
+                <td className="px-1 py-1 text-center border">
                   <Image
                     src={
                       data?.imageLink ||
@@ -76,17 +76,25 @@ export default function Product() {
                     className="bg-center bg-contain"
                   />
                 </td>
-                <td className="px-4 py-2 border">{data.productId}</td>
-                <td className="px-4 py-2 border">{data.productName}</td>
-                <td className="px-4 py-2 border">{data.tdp}</td>
-                <td className="px-4 py-2 border">{data.price}</td>
-                <td className="px-4 py-2 border">
-                  <span className="bg-green-600 text-white px-2 py-1 rounded-full">
-                    {data.tdp}
-                  </span>
+                <td className="px-1 py-1 text-center border">
+                  {data.productId}
                 </td>
-                <td className="px-4 py-2 border">{data.date}</td>
-                <td className="px-4 py-2 border text-center">
+                <td className="px-1 py-1 text-center border">
+                  {data.productName}
+                </td>
+                <td
+                  className={`px-1 py-1 text-center border ${
+                    data.tdp > 0 ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  <span>{data.tdp}</span>
+                </td>
+                <td className="px-1 py-1 text-center border">{data.price}</td>
+                <td className="px-1 py-1 text-center border">
+                  <span>{data.brand}</span>
+                </td>
+                <td className="px-1 py-1 text-center border">{data.warranty}</td>
+                <td className="px-1 py-1 text-center border text-black">
                   <i class="fa-solid fa-pencil"></i>
                 </td>
               </tr>

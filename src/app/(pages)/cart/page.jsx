@@ -15,14 +15,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-
+import { jwtDecode } from "jwt-decode";
+import { createOrders } from "@/service/Api-service/apiOrders";
 export default function Cart() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
   const [selectAll, setSelectAll] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-
+  const [name, setName] = useState('');
+  const [date, setDate] = useState(null)
   useEffect(() => {
     const selectedItemStr = Cookies.get("selectedItem");
     if (selectedItemStr) {
@@ -39,8 +41,12 @@ export default function Cart() {
 
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      const decodedToken = jwtDecode(parsedUser.tokenInformation.accessToken);
+      setCurrentUser(parsedUser);
+      setName(decodedToken.unique_name);
     }
+    setDate(new Date().toISOString())
   }, []);
 
   const updateCookie = (items) => {
@@ -131,12 +137,26 @@ export default function Cart() {
       if (selectedProducts.length === 0) {
         toast.error("Product empty");
       } else {
-        console.log("Selected products:", selectedProducts);
-        // Thực hiện các hành động khác, ví dụ: chuyển đến trang thanh toán
+        try {
+          const data = {
+            orderDate: date,
+            orderStatus: 0,
+            orderAddress: name,
+            items: selectedProducts.map((product) => ({
+              productId: product.productId,
+              quantity: product.quantity,
+            })),
+          }
+          const res = createOrders(data);
+          const updatedItems = selectedItems.filter((item) => !selectedProducts.some((p) => p.productId === item.productId));
+          setSelectedItems(updatedItems);
+          updateCookie(updatedItems);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     }
   };
-
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4 ml-4">Shopping Cart</h2>
