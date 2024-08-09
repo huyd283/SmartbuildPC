@@ -40,9 +40,9 @@ export const getListOrders = async (id) => {
 
 
 
-export const filterProducts = async (body) => {
+export const CancelOrder = async (body) => {
   try {
-    const response = await jwtInterceptor('Product/FilterProductsHome', {
+    const response = await jwtInterceptor('Order/CancelOrder', {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {

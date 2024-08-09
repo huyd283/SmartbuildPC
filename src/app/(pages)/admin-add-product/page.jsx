@@ -1,17 +1,24 @@
 "use client";
-import { getDataCate } from "@/service/Api-service/apiCategorys";
-import { createProduct } from "@/service/Api-service/apiProducts"; // Giả sử bạn có hàm này để gọi API tạo sản phẩm
+import { createProduct } from "@/service/Admin-service/admin-product";
+import { getDataCate, getDataStore } from "@/service/Api-service/apiCategorys";
 import { useEffect, useState } from "react";
 
 export default function AddProduct() {
   const [listCate, setListCate] = useState([]);
+  const [listStore, setListStore] = useState([]);
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState(0);
+  const [productWarranty, setProductWarranty] = useState(0);
+  const [productBrand, setProductBrand] = useState("");
+  const [productTag, setProductTag] = useState("");
+  const [productTPD, setProductTPD] = useState("");
+  const [productStatus, setProductStatus] = useState("");
   const [productCategory, setProductCategory] = useState("");
+  const [productStore, setProductStore] = useState("");
   const [productImage, setProductImage] = useState(null);
 
-  const fetchData = async () => {
+  const fetchDataCate = async () => {
     try {
       const res = await getDataCate();
       const sortedData = res.result.sort((a, b) => a.categoryId - b.categoryId);
@@ -21,8 +28,19 @@ export default function AddProduct() {
     }
   };
 
+  const fetchDataStore = async () => {
+    try {
+      const res = await getDataStore();
+      const sortedData = res.result.sort((a, b) => a.storeID - b.storeID);
+      setListStore(sortedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchDataCate();
+    fetchDataStore();
   }, []);
 
   const handleImageChange = (e) => {
@@ -42,19 +60,26 @@ export default function AddProduct() {
     }
 
     const formData = new FormData();
-    formData.append("name", productName);
-    formData.append("description", productDescription);
+    formData.append("ProductName", productName);
+    formData.append("Description", productDescription);
     formData.append("price", productPrice);
+    formData.append("Warranty", productWarranty);
+    formData.append("Brand", productBrand);
+    formData.append("Tag", productTag);
+    formData.append("tpd", productTPD);
+    formData.append("status", productStatus);
     formData.append("categoryId", productCategory);
-    formData.append("image", productImage); // Gửi file ảnh qua API
+    formData.append("StoreStocks", productStore);
+    formData.append("ImageFile", productImage);
 
     try {
       // const response = await createProduct(formData); // Giả sử bạn có hàm này để gọi API
       // console.log("Sản phẩm đã được tạo:", formData);
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-      console.log("Sản phẩm đã được tạo:", formData);
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
+      const res = await createProduct(formData)
+      console.log(res);
     } catch (error) {
       console.error("Error creating product:", error);
     }
@@ -74,7 +99,7 @@ export default function AddProduct() {
             type="text"
             id="product-name"
             className="w-full p-2 border border-border rounded"
-            placeholder="Nhập tên sản phẩm"
+            placeholder="Enter tên sản phẩm"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             required
@@ -91,7 +116,7 @@ export default function AddProduct() {
             type="text"
             id="product-description"
             className="w-full p-2 border border-border rounded"
-            placeholder="Nhập mô tả"
+            placeholder="Enter mô tả"
             value={productDescription}
             onChange={(e) => setProductDescription(e.target.value)}
             required
@@ -108,10 +133,96 @@ export default function AddProduct() {
             type="number"
             id="product-price"
             className="w-full p-2 border border-border rounded"
-            placeholder="Nhập giá"
+            placeholder="Enter giá"
             min={0}
             value={productPrice}
             onChange={(e) => setProductPrice(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="product-warranty"
+            className="block text-primary font-semibold mb-2"
+          >
+            Bảo hành
+          </label>
+          <input
+            type="number"
+            id="product-warranty"
+            className="w-full p-2 border border-border rounded"
+            placeholder="Enter warranty"
+            min={0}
+            value={productWarranty}
+            onChange={(e) => setProductWarranty(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="product-brand"
+            className="block text-primary font-semibold mb-2"
+          >
+            Thương hiệu
+          </label>
+          <input
+            type="text"
+            id="product-brand"
+            className="w-full p-2 border border-border rounded"
+            placeholder="Enter brand"
+            value={productBrand}
+            onChange={(e) => setProductBrand(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="product-tag"
+            className="block text-primary font-semibold mb-2"
+          >
+            Tag
+          </label>
+          <input
+            type="text"
+            id="product-tag"
+            className="w-full p-2 border border-border rounded"
+            placeholder="Enter tag"
+            value={productTag}
+            onChange={(e) => setProductTag(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="product-tpd"
+            className="block text-primary font-semibold mb-2"
+          >
+            TPD
+          </label>
+          <input
+            type="text"
+            id="product-tpd"
+            className="w-full p-2 border border-border rounded"
+            placeholder="Enter TPD"
+            value={productTPD}
+            onChange={(e) => setProductTPD(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="product-status"
+            className="block text-primary font-semibold mb-2"
+          >
+            Status
+          </label>
+          <input
+            type="text"
+            id="product-status"
+            className="w-full p-2 border border-border rounded"
+            placeholder="Enter status"
+            value={productStatus}
+            onChange={(e) => setProductStatus(e.target.value)}
             required
           />
         </div>
@@ -139,8 +250,31 @@ export default function AddProduct() {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="product-image"
+            htmlFor="product-store"
             className="block text-primary font-semibold mb-2"
+          >
+            Cửa hàng
+          </label>
+          <select
+            id="product-store"
+            className="w-full p-2 border border-border rounded"
+            value={productStore}
+            onChange={(e) => setProductStore(e.target.value)}
+            required
+          >
+            <option value="">Chọn cửa hàng</option>
+            {listStore.map((item) => (
+              <option key={item.storeID} value={item.storeID}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="product-image"
+            className="block text-primary font-semibold
+ mb-2"
           >
             Ảnh sản phẩm
           </label>
