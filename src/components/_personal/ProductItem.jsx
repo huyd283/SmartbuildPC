@@ -6,6 +6,8 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { getData } from "@/service/Api-service/apiProducts";
 
+import { setTotalPrice, updateTotalPrice } from "@/app/_utils/store/product.slice";
+import { useDispatch } from "react-redux";
 
 export default function ProductItem({
   id,
@@ -18,6 +20,7 @@ export default function ProductItem({
   const [Dataproduct, setDataproduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; 
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
@@ -50,7 +53,7 @@ export default function ProductItem({
     }
   };
 
-  const filteredProducts = Dataproduct.filter((item) =>
+  const filteredProducts = Dataproduct?.filter((item) =>
     item.productName.toLowerCase().includes(inputValue.toLowerCase())
   );
 
@@ -59,6 +62,7 @@ export default function ProductItem({
   const onSelected = (product) => {
     toast.success("Choose a successful product!");
     onProductSelected(product);
+    dispatch(updateTotalPrice(product?.price)); 
   };
 
   const formatVND = (price) => {
@@ -67,9 +71,9 @@ export default function ProductItem({
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedProducts.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = sortedProducts?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedProducts?.length / itemsPerPage);
 
   const goToPreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -81,7 +85,7 @@ export default function ProductItem({
 
   return (
     <div className="w-full flex flex-col gap-y-3 max-h-[300px] lg:max-h-[450px] 2xl:max-h-[600px] overflow-y-scroll">
-      {currentItems.map((item) => (
+      {currentItems?.map((item) => (
         <div key={item.productId} className="w-full flex items-center justify-between float-left border p-4 rounded-sm">
           <Link href={item.href || "#"} className="w-20 h-20 overflow-hidden rounded-md">
             <Image

@@ -16,12 +16,15 @@ import {
 import { toast } from "react-hot-toast";
 import { getDataCate } from "@/service/Api-service/apiCategorys";
 import Cookies from 'js-cookie';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateTotalPrice ,resetTotalPrice} from "@/app/_utils/store/product.slice"; 
 
 export default function BuildConfig() {
   const [configList, setConfigList] = useState([]);
   const [refreshFlag, setRefreshFlag] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [selectedItem, setSelectedItem] = useState([]);
+  const totalPrice = useSelector((state) => state.product.totalPrice);
+  const dispatch = useDispatch();
 
   const handleProductSelected = (item, action) => {
     if (action === 'add') {
@@ -36,9 +39,9 @@ export default function BuildConfig() {
       return;
     }
     if (action === 'add') {
-      setTotalPrice(prevTotal => prevTotal + price * quantityItem);
+      dispatch(updateTotalPrice(price * quantityItem)); // Dispatch cập nhật totalPrice
     } else if (action === 'remove') {
-      setTotalPrice(prevTotal => prevTotal - price * quantityItem);
+      dispatch(updateTotalPrice(-price * quantityItem)); // Dispatch cập nhật totalPrice
     }
   };
 
@@ -46,14 +49,17 @@ export default function BuildConfig() {
     const existingItem = selectedItem.find(i => i.productId === item.productId);
     if (existingItem) {
       const newTotalPrice = totalPrice - (existingItem.price * (existingItem.quantity || 1)) + (item.price * quantity);
-      setTotalPrice(newTotalPrice);
+      dispatch(updateTotalPrice(newTotalPrice - totalPrice)); // Chỉ dispatch phần thay đổi
       existingItem.quantity = quantity;
+    } else {
+      const newTotalPrice = item.price * quantity;
+      dispatch(updateTotalPrice(newTotalPrice)); // Dispatch thêm giá mới
+      setSelectedItem([...selectedItem, item]);
     }
-    setSelectedItem([...selectedItem]);
   };
 
   const onRefresh = () => {
-    setTotalPrice(0);
+    dispatch(resetTotalPrice()); // Dispatch để reset totalPrice
     setRefreshFlag((prev) => !prev);
     toast.success("Configuration refresh successful!");
   };
@@ -61,7 +67,7 @@ export default function BuildConfig() {
   const onOk = () => {
     const existingItemsStr = Cookies.get('selectedItem');
     let existingItems = [];
-  
+
     if (existingItemsStr) {
       try {
         existingItems = JSON.parse(decodeURIComponent(existingItemsStr));
@@ -69,7 +75,7 @@ export default function BuildConfig() {
         console.error("Error parsing JSON from cookie:", e);
       }
     }
-  
+
     const updatedItems = selectedItem.map(item => {
       const existingItem = existingItems.find(i => i.productId === item.productId);
       if (existingItem) {
@@ -79,12 +85,12 @@ export default function BuildConfig() {
         return { ...item, quantity: item.quantity || 1 };
       }
     });
-  
+
     existingItems = [
       ...existingItems.filter(i => !updatedItems.find(u => u.productId === i.productId)),
       ...updatedItems
     ];
-  
+
     const selectedItemStr = JSON.stringify(existingItems);
     Cookies.set('selectedItem', selectedItemStr, { expires: 7 });
     toast.success("All products have been added to the cart!");

@@ -98,7 +98,12 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
       onRefreshRef.current();
     }
   }, [onRefresh]);
-
+  useEffect(() => {
+    if (selectedItem && quantityItem !== null) {
+      onPriceChange(selectedItem.price, 'update', quantityItem);
+    }
+  }, [selectedItem, quantityItem]);
+  
   return (
     <Collapsible open={true}>
       <div className="w-full flex flex-col md:flex-row items-center justify-between float-left border p-4 rounded-sm">

@@ -19,6 +19,82 @@ export const getData = async (data) => {
     return error;
   }
 };
+
+export const getDataProduct = async (id) => {
+  try {
+    const response = await jwtInterceptor(`Product/GetProductsByCategory?cateID=${id}` ,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    } );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return error;
+  }
+};
+
+export const getBrandbyCate = async (id) => {
+  try {
+    const response = await jwtInterceptor(`Product/GetBrandsByCategory/${id}` ,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    } );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return error;
+  }
+};
+
+export const getProductByBrandandCate = async (id,name) => {
+  try {
+    const response = await jwtInterceptor(`Product/GetAllProductsByCategoryIdAndBrand?categoryId=${id}&brand=${name}` ,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    } );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return error;
+  }
+};
+
+
+export const getProductByNameandCate = async (name,cate) => {
+  try {
+    const response = await jwtInterceptor(`Product/GetAllProductsByNameAndCateId?productName=${name}&categoryId=${cate}` ,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    } );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return error;
+  }
+};
+
+
+
 export const getDetailProduct = async (id) => {
   try {
     const response = await jwtInterceptor('Product/GetProducts?id=' + id );

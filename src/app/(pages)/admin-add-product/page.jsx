@@ -15,7 +15,7 @@ export default function AddProduct() {
   const [productTPD, setProductTPD] = useState("");
   const [productStatus, setProductStatus] = useState("");
   const [productCategory, setProductCategory] = useState("");
-  const [productStore, setProductStore] = useState("");
+  const [productStore, setProductStore] = useState('');
   const [productImage, setProductImage] = useState(null);
 
   const fetchDataCate = async () => {
@@ -69,7 +69,10 @@ export default function AddProduct() {
     formData.append("tpd", productTPD);
     formData.append("status", productStatus);
     formData.append("categoryId", productCategory);
-    formData.append("StoreStocks", productStore);
+    formData.append("StoreStocks", {
+      storeID: 1,
+      productStore: productStore
+    });
     formData.append("ImageFile", productImage);
 
     try {
@@ -253,22 +256,31 @@ export default function AddProduct() {
             htmlFor="product-store"
             className="block text-primary font-semibold mb-2"
           >
-            Cửa hàng
+            Số lượng
           </label>
-          <select
+          <input
+            type="number"
+            id="product-store"
+            className="w-full p-2 border border-border rounded"
+            placeholder="Enter quantity"
+            value={productStore}
+            onChange={(e) => setProductStore(e.target.value)}
+            required
+          />
+          {/* <select
             id="product-store"
             className="w-full p-2 border border-border rounded"
             value={productStore}
             onChange={(e) => setProductStore(e.target.value)}
             required
           >
-            <option value="">Chọn cửa hàng</option>
+            <option value="" hidden >Chọn cửa hàng</option>
             {listStore.map((item) => (
               <option key={item.storeID} value={item.storeID}>
                 {item.name}
               </option>
             ))}
-          </select>
+          </select> */}
         </div>
         <div className="mb-4">
           <label

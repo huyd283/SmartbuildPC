@@ -42,7 +42,7 @@ export default function Cart() {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      const decodedToken = jwtDecode(parsedUser.tokenInformation.accessToken);
+      const decodedToken = jwtDecode(parsedUser?.tokenInformation?.accessToken);
       setCurrentUser(parsedUser);
       setName(decodedToken.unique_name);
     }
@@ -151,6 +151,8 @@ export default function Cart() {
           const updatedItems = selectedItems.filter((item) => !selectedProducts.some((p) => p.productId === item.productId));
           setSelectedItems(updatedItems);
           updateCookie(updatedItems);
+          window.location.href = "/orders-manager";
+
         } catch (error) {
           console.error("Error fetching data:", error);
         }

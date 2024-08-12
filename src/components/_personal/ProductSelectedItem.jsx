@@ -21,8 +21,8 @@ export default function ProductSelectedItem({ item, onRemove, onQuantityChange }
       setQuantity(newQuantity);
       onQuantityChange(item, newQuantity);
     }
-
   };
+  
 
   return (
     <div className="w-full flex items-center justify-between float-left border p-4 rounded-sm">

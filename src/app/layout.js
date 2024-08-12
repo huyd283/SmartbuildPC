@@ -8,6 +8,7 @@ import { BackToTop } from "@/components/_personal";
 import { usePathname } from 'next/navigation';
 import AdminLayout from './_components/AdminLayout/AdminLayout'; 
 import  { Toaster } from "react-hot-toast";
+import ChatBox from "@/components/_personal/chatBox";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
           <Header />
           {/* <Navigation /> */}
           {children}
+          <ChatBox/>
           <Footer />
           <BackToTop />
         </StoreProvider>

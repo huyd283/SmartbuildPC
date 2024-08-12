@@ -37,7 +37,7 @@ export default function ProductDetal() {
         <>
  
         <div className="body-new-2019">
-          <div className="container-2019 ">
+          <div className="container-2019 " style={{marginTop:'40px'}}>
             <div
               className="bg-white d-flex flex-wrap product-detail-top"
               style={{ borderRadius: 3 }}
@@ -68,10 +68,10 @@ export default function ProductDetal() {
                       style={{ display: "flex", flexWrap: "wrap" }}
                     >
                       <div className="product_detail-sku">
-                        Mã SP: <span className="sku">PCHP838</span>
+                        Product ID: <span className="sku">PCHP838</span>
                       </div>
                       <div className="product_detail-separator" />
-                      Đánh giá:
+                      Rating:
                       <a
                         href="#tab5"
                         className="product_detail-star"
@@ -82,16 +82,16 @@ export default function ProductDetal() {
                       </a>
                       <div className="product_detail-separator" />
                       <a href="#comment" className="product_detail-view-counter">
-                        Bình luận: <span className="counter-number">0</span>
+                        Comment: <span className="counter-number">0</span>
                       </a>
                       <div className="product_detail-separator" />
                       <div className="product_detail-view-counter">
-                        Lượt xem: <span className="counter-number">1244</span>
+                        View Number: <span className="counter-number">1244</span>
                       </div>
                     </div>
                     <div className="product-summary-item" style={{ padding: 0 }}>
                       <div className="product-summary-item-title">
-                        Thông số sản phẩm
+                      Product Specification
                       </div>
                       <ul
                         className="product-summary-item-ul d-flex flex-wrap mb-0"
@@ -143,26 +143,27 @@ export default function ProductDetal() {
                     </div>
                     <div className="clear" />
                     <div
-                      id="button_buy_2019"
+                      id="button_buy_2019" 
                       className="d-flex flex-wrap justify-content-start"
                     >
                       {/* kiểm tra có giá kmai hay ko */}
                       <div className="top-buttons-th1">
                         <a
-                          style={{}}
+                         
+                          style={{backgroundColor: '#026DB5'}}
                           href="javascript:;"
                           onclick="listenBuyProDetail('80652',0,1,'','/cart?step=3')"
                           className="mua-ngay th1"
                         >
-                          <span>Đặt mua ngay</span> Giao nhanh tận nơi, miễn phí
-                          toàn quốc
+                          <span>Order Now</span> Fast delivery, free of charge
+                          nationally
                         </a>
                       </div>
                     </div>
                   </div>
                   <div className="product-detail-static-content">
-                    <div className="static-item san-pham-chung">
-                      <div className="title">YÊN TÂM MUA HÀNG</div>
+                    <div  className="static-item san-pham-chung">
+                      <div style={{backgroundColor: '#026DB5'}} className="title">REST ASSURED TO BUY</div>
                       <div className="static-nd">
                         <ul className="m-0 d-flex align-items-center flex-wrap list-unstyled pl-2">
                           <li>
@@ -171,7 +172,7 @@ export default function ProductDetal() {
                               style={{ color: "#212529" }}
                               href="https://hacom.vn/gioi-thieu-ve-hacom"
                             >
-                              Uy tín 24 năm Top đầu trên thị trường
+                              Prestige 24 years Top in the market
                             </a>
                           </li>
                           <li>
@@ -180,7 +181,7 @@ export default function ProductDetal() {
                               style={{ color: "#212529" }}
                               href="https://www.hacom.vn/chinh-sach-hang-chinh-hang"
                             >
-                              Sản phẩm chính hãng 100%
+                              100% Genuine Products
                             </a>
                           </li>
                           <li>
@@ -189,7 +190,7 @@ export default function ProductDetal() {
                               style={{ color: "#212529" }}
                               href="https://www.hacom.vn/huong-dan-mua-hang-tra-gop"
                             >
-                              Trả góp lãi suất 0% to�&nbsp;n bộ giỏ h�&nbsp;ng
+                              0% interest installment for the entire shopping cart
                             </a>
                           </li>
                           <li>
@@ -198,7 +199,7 @@ export default function ProductDetal() {
                               style={{ color: "#212529" }}
                               href="https://www.hacom.vn/chinh-sach-bao-hanh"
                             >
-                              Trả bảo h�&nbsp;nh tận nơi sử dụng
+                              Return the warranty to the place of use
                             </a>
                           </li>
                           <li>
@@ -207,7 +208,7 @@ export default function ProductDetal() {
                               style={{ color: "#212529" }}
                               href="https://www.hacom.vn/chinh-sach-cho-doanh-nghiep"
                             >
-                              Bảo h�&nbsp;nh tận nơi cho doanh nghiệp
+                              On-site warranty for businesses
                             </a>
                           </li>
                           <li>
@@ -215,21 +216,21 @@ export default function ProductDetal() {
                               target="_blank"
                               href="https://www.hacom.vn/den-hacom-ve-sinh-may-tinh-mien-phi-tren-toan-he-thong"
                             >
-                              Vệ sinh miễn phí trọn đời PC, Laptop
+                              PC lifetime free cleaning
                             </a>
                           </li>
                         </ul>
                       </div>
                     </div>
                     <div className="static-item">
-                      <div className="title">MIỄN PHÍ GIAO HÀNG</div>
+                      <div style={{backgroundColor: '#026DB5'}} className="title">FREE SHIP</div>
                       <div className="static-nd">
                         <ul className="m-0 d-flex align-items-center flex-wrap list-unstyled pl-2">
                        
-                          <li>Giao h�&nbsp;ng miễn phí to�&nbsp;n quốc</li>
+                          <li>Free delivery to all of the country
+                          </li>
                           <li>
-                            Nhận h�&nbsp;ng v�&nbsp; thanh toán tại nh�&nbsp; (ship
-                            COD)
+                          Receive payment at the bank (ship COD)
                           </li>
                        
                         </ul>
@@ -251,23 +252,18 @@ export default function ProductDetal() {
                   >
                     <div className="nd title_box_scroll_content_2019 showmore">
                       <h2 className="ddnb-title spct-title">
-                        Đánh giá: {productdetail?.productName}
+                        Rate: {productdetail?.productName}
                       </h2>
                       <div id="js-product-description">
                         <p>
-                          <strong>Lưu ý:�&nbsp;</strong>
-                          <em>
-                            B�&nbsp;i viết v�&nbsp; hình ảnh chỉ có tính chất tham
-                            khảo vì cấu hình v�&nbsp; đặc tính sản phẩm có thể thay
-                            đổi theo thị trường v�&nbsp; từng phiên bản. Quý khách cần
-                            cấu hình cụ thể vui lòng xem bảng thông số kĩ thuật hoặc
-                            hỏi kinh doanh trước khi mua.�&nbsp;
-                          </em>
+                          <strong>Note: </strong>
+                          <div>
+                          The image is for reference only because the product specification may vary according to the market for each version. If you need a specific configuration, please see the technical specification sheet or ask the business before purchasing. Note: The image is for reference only because the product specification may vary according to the market for each version. If you need a specific configuration, please see the technical specification sheet or ask the business before purchasing. 
+                          </div>
                         </p>
                         <h3>
                           <strong>
-                            PC HP 280 PRO G9 được nhiều người đón nhận bởi tính bền bỉ
-                            trong suốt quá trình sử dụng.
+                              Description:
                           </strong>
                         </h3>
                         <p>
@@ -283,7 +279,7 @@ export default function ProductDetal() {
                 <div className="right-column">
                   <div className="content_scroll_tab_2019" id="tab2">
                     <div className="nd title_box_scroll_content_2019">
-                      <h2 className="tskt-title spct-title">Thông số kỹ thuật</h2>
+                      <h2 className="tskt-title spct-title">Specifications</h2>
                       <div className="bang-tskt">
                         <table className="tb-product-spec">
                           <tbody>

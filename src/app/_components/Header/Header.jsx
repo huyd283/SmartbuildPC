@@ -4,6 +4,8 @@ import {
   CircleUserRound,
   LayoutGrid,
   ShoppingCart,
+  Wrench,
+
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,6 +47,7 @@ export default function Header() {
     pathname === "/login" || pathname === "/admin-login" || pathname === "/create-account" ? false : true;
 
   const handleInputChange = (e) => {
+    
     setSearchQuery(e.target.value);
   };
   useEffect(() => {
@@ -54,7 +57,7 @@ export default function Header() {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      const decodedToken = jwtDecode(parsedUser.tokenInformation.accessToken);
+      const decodedToken = jwtDecode(parsedUser?.tokenInformation?.accessToken);
       setCurrentUser(decodedToken?.Username)
     }
   }, []);
@@ -74,6 +77,7 @@ export default function Header() {
 
   const searchProduct = (event) => {
     event.preventDefault();
+    
     window.location.href = `/productSearch?query=${searchQuery}`;
     // localStorage.setItem("searchProduct", searchQuery)
     // setSearchValue(searchQuery);
@@ -101,26 +105,28 @@ export default function Header() {
         </Link>
 
         {/* Category Product */}
+        <div className="listproduct" style={{position:'relative'}}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <h2 className="hidden lg:flex gap-2 items-center border rounded-sm p-2 px-4 bg-white cursor-pointer text-sm font-semibold">
-              <LayoutGrid className="h-4 w-4" />Product portfolio
+              <LayoutGrid className="h-4 w-4 listproduct" />Category
             </h2>
           </DropdownMenuTrigger>
 
         </DropdownMenu>
-
+            
         <div style={{ display: 'none', marginTop: '1px' }} className="homepage-slider-2019 absolute">
           <div className="homepage-slider-left">
             <ul className="ul ul_menu_2019 boxshadowx2023" id="menu-2019">
               {listCate?.result?.map(item => (
                 <li
+                  key={item.categoryId}
                   id="vt-1106"
                   className="js-hover-menu li-catcha-menu"
                 >
-                  <Link href={`/productSearch?searchCate=${item.categoryId}`} className="root">
+                  <a onClick={() => navigate(item.categoryId)} className="root">
                     {item.categoryName}
-                  </Link>
+                  </a>
                   <span className="arrow-li-catcha-menu" />
                 </li>
               ))}
@@ -129,7 +135,7 @@ export default function Header() {
             </ul>
           </div>
         </div>
-
+        </div>
 
 
         {/* search input */}
@@ -162,10 +168,11 @@ export default function Header() {
               <input
                 type="search"
                 id="default-search"
-                value={searchProduct ?? ''}
+                value={searchQuery}
                 className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="What do you want..."
                 required=""
+                
                 onChange={handleInputChange}
               />
               <button
@@ -206,6 +213,14 @@ export default function Header() {
             <ShoppingCart color="#ffffff" size={32} />
             <span className="text-[13px] font-medium text-white w-full text-center">
               Cart
+            </span>
+          </Link>
+          <Link
+            className="lg:flex flex-col items-center px-3 gap-y-1 hidden"
+            href={"/xay-dung-cau-hinh"}>
+              <Wrench color="#ffffff" size={32} />
+            <span className="text-[13px] font-medium text-white w-full text-center">
+              SmartBuild
             </span>
           </Link>
           {/* Navigation mobile */}

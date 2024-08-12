@@ -80,19 +80,19 @@ export default function Widget() {
           All ({listOrder.length})
         </button>
         <button
-          className="bg-muted text-muted-foreground p-2 rounded active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
           onClick={() => setOrderStatus("PENDING")}
         >
           Pending
         </button>
         <button
-          className="bg-muted text-muted-foreground p-2 rounded active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
           onClick={() => setOrderStatus("APPROVED")}
         >
           Approved
         </button>
         <button
-          className="bg-muted text-muted-foreground p-2 rounded active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300"
           onClick={() => setOrderStatus("CANCEL")}
         >
           Cancel
@@ -102,9 +102,31 @@ export default function Widget() {
       {filteredOrders.map((order) => (
         <Collapsible key={order.orderID} open={openOrderId === order.orderID}>
           <div className="border-b border-border pb-4 mb-4">
-            <h3 className="text-lg font-medium">Order ID: {order.orderID}</h3>
-            <h3 className="text-lg font-medium">Created At: {order.orderDate}</h3>
-            <h3 className="text-lg font-medium">Created By: {order.orderAddress}</h3>
+            <div className="flex justify-between">
+              <div>
+                <h3 className="text-lg font-medium">
+                  Order ID: {order.orderID}
+                </h3>
+                <h3 className="text-lg font-medium">
+                  Created At: {order.orderDate}
+                </h3>
+                <h3 className="text-lg font-medium">
+                  Created By: {order.orderAddress}
+                </h3>
+              </div>
+              <div
+                className={`text-lg font-medium ${
+                  order.orderStatus === "CANCEL"
+                    ? "text-red-500"
+                    : order.orderStatus === "PENDING" ||
+                      order.orderStatus === "APPROVE"
+                    ? "text-green-500"
+                    : ""
+                }`}
+              >
+                Order Status: {order.orderStatus}
+              </div>
+            </div>
             <div className="flex justify-between">
               <CollapsibleTrigger asChild>
                 <button
@@ -153,10 +175,12 @@ export default function Widget() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Confirm Cancellation</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          Confirm Cancellation
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to cancel this order? This action
-                          cannot be undone.
+                          Are you sure you want to cancel this order? This
+                          action cannot be undone.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
