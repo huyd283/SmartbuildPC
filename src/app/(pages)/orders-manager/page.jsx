@@ -92,6 +92,12 @@ export default function Widget() {
           Approved
         </button>
         <button
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
+          onClick={() => setOrderStatus("DONE")}
+        >
+          Done
+        </button>
+        <button
           className="bg-muted text-muted-foreground p-2 rounded active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300"
           onClick={() => setOrderStatus("CANCEL")}
         >

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import {  LoginAdmin } from '@/service/Login/login';
 import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -19,7 +20,12 @@ export default function Login() {
       if(response.statusCode === 200 || response.statusCode === 201) {
         toast.success(response.message);
         localStorage.setItem('currentUser', JSON.stringify(response));
-        window.location.href = '/admin-add-product';
+        const decodedToken = jwtDecode(response?.tokenInformation?.accessToken);
+        if(decodedToken?.role == "ADMIN"){
+          window.location.href = '/admin-add-product';
+        } else {
+          window.location.href = '/';
+         }
       }
       else {
         toast.error(response.errorMessages)

@@ -5,17 +5,16 @@ import { useEffect, useState } from "react";
 
 export default function AddProduct() {
   const [listCate, setListCate] = useState([]);
-  const [listStore, setListStore] = useState([]);
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState(0);
-  const [productWarranty, setProductWarranty] = useState(0);
+  const [productWarranty, setProductWarranty] = useState("");
   const [productBrand, setProductBrand] = useState("");
   const [productTag, setProductTag] = useState("");
   const [productTPD, setProductTPD] = useState("");
   const [productStatus, setProductStatus] = useState("");
   const [productCategory, setProductCategory] = useState("");
-  const [productStore, setProductStore] = useState('');
+  const [productQuantity, setProductQuantity] = useState('');
   const [productImage, setProductImage] = useState(null);
 
   const fetchDataCate = async () => {
@@ -28,19 +27,8 @@ export default function AddProduct() {
     }
   };
 
-  const fetchDataStore = async () => {
-    try {
-      const res = await getDataStore();
-      const sortedData = res.result.sort((a, b) => a.storeID - b.storeID);
-      setListStore(sortedData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
     fetchDataCate();
-    fetchDataStore();
   }, []);
 
   const handleImageChange = (e) => {
@@ -69,18 +57,9 @@ export default function AddProduct() {
     formData.append("tpd", productTPD);
     formData.append("status", productStatus);
     formData.append("categoryId", productCategory);
-    formData.append("StoreStocks", {
-      storeID: 1,
-      productStore: productStore
-    });
+    formData.append("quantity", productQuantity)
     formData.append("ImageFile", productImage);
-
     try {
-      // const response = await createProduct(formData); // Giả sử bạn có hàm này để gọi API
-      // console.log("Sản phẩm đã được tạo:", formData);
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(`${key}: ${value}`);
-      // }
       const res = await createProduct(formData)
       console.log(res);
     } catch (error) {
@@ -150,16 +129,20 @@ export default function AddProduct() {
           >
             Bảo hành
           </label>
-          <input
-            type="number"
+          <select
             id="product-warranty"
             className="w-full p-2 border border-border rounded"
-            placeholder="Enter warranty"
-            min={0}
             value={productWarranty}
             onChange={(e) => setProductWarranty(e.target.value)}
             required
-          />
+          >
+            <option value="" hidden>Chọn thời gian</option>
+            <option value="12 Months">12 Months</option>
+            <option value="24 Months">24 Months</option>
+            <option value="36 Months">36 Months</option>
+            <option value="48 Months">48 Months</option>
+          </select>
+         
         </div>
         <div className="mb-4">
           <label
@@ -263,24 +246,10 @@ export default function AddProduct() {
             id="product-store"
             className="w-full p-2 border border-border rounded"
             placeholder="Enter quantity"
-            value={productStore}
-            onChange={(e) => setProductStore(e.target.value)}
+            value={productQuantity}
+            onChange={(e) => setProductQuantity(e.target.value)}
             required
           />
-          {/* <select
-            id="product-store"
-            className="w-full p-2 border border-border rounded"
-            value={productStore}
-            onChange={(e) => setProductStore(e.target.value)}
-            required
-          >
-            <option value="" hidden >Chọn cửa hàng</option>
-            {listStore.map((item) => (
-              <option key={item.storeID} value={item.storeID}>
-                {item.name}
-              </option>
-            ))}
-          </select> */}
         </div>
         <div className="mb-4">
           <label

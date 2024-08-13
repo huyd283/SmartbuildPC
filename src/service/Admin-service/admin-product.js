@@ -33,8 +33,6 @@ export const getDetailProduct = async (id) => {
 
 
 export const GetAllProducts = async (body) => {
-  console.log(body);
-  
   try {
     const response = await jwtInterceptor('Product/GetAllProducts?' + `pageNumber=${body.page}&pageSize=${body.limit}`, {
       method: 'GET',

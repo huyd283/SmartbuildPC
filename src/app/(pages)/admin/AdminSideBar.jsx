@@ -18,7 +18,10 @@ export default function AdminSidebar() {
   const pathname = usePathname();
   const [lastSegment, setActivePath] = useState('/')
   const showHeader = pathname === "/admin-login"  ? false : true;
-  function onClickLogout() {}
+  function onClickLogout() {
+    window.location.href = '/admin-login';
+    localStorage.clear()
+  }
 
   return (
     <div className={`${!showHeader && "hidden"} `}>
