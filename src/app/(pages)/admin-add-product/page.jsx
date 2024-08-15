@@ -68,7 +68,7 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto bg-card text-card-foreground rounded-lg shadow-md">
+    <div className="p-6 mx-auto bg-card text-card-foreground rounded-lg shadow-md ml-64">
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
@@ -202,15 +202,16 @@ export default function AddProduct() {
           >
             Status
           </label>
-          <input
-            type="text"
+          <select
             id="product-status"
             className="w-full p-2 border border-border rounded"
-            placeholder="Enter status"
             value={productStatus}
             onChange={(e) => setProductStatus(e.target.value)}
             required
-          />
+          >
+            <option value="0">Ngừng kinh doanh</option>
+            <option value="1">Đang kinh doanh</option>
+          </select>
         </div>
         <div className="mb-4">
           <label

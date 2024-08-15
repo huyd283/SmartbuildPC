@@ -50,6 +50,43 @@ export const GetAllProducts = async (body) => {
   }
 };
 
+export const deleteProduct = async (id) => {
+  console.log(id);
+  
+  try {
+    const response = await jwtInterceptor('Product/DeleteProduct/' + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      console.log(response)
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error posting data:', error);
+    return error;
+  }
+};
+export const updateProduct = async (id ,data) => {
+  console.log(id);
+  
+  try {
+    const response = await jwtInterceptor('Product/UpdateProduct/' + id,  {
+      method: 'PUT',
+      body: data,
+     
+    });
+    if (!response.ok) {
+      console.log(response)
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error posting data:', error);
+    return error;
+  }
+};
 
 export const searchProductbyDes = async (searchProduct) => {
   try {

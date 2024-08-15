@@ -29,7 +29,7 @@ import { ProductItem, ProductSelectedItem } from ".";
 import { useSelector } from "react-redux";
 import Filter from "./Filter";
 import toast from "react-hot-toast";
-import { setSelectedProduct, removeSelectedProduct } from "@/app/_utils/store/product.slice";
+import { setSelectedProduct, removeSelectedProduct, decreTotalPrice } from "@/app/_utils/store/product.slice";
 import { useDispatch } from "react-redux";
 
 export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected, onQuantityChange }) {
@@ -72,6 +72,9 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
     onPriceChange(selectedItem?.price, action, quantityItem);
     setSelectedItem(null);
     dispatch(removeSelectedProduct(selectedItem.productId));
+    console.log(selectedItem.price);
+    
+    dispatch(decreTotalPrice(selectedItem?.price)); 
     toast.success("Deleted successfully");
   };
 

@@ -1,145 +1,256 @@
-"use client"
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { getListOrders } from "@/service/Admin-service/admin-orders";
+"use client";
+import { ApproveOrder, CancelOrder, DoneOrder } from "@/service/Api-service/apiOrders";
+import { useEffect, useState } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { getListOrdersAdmin } from "@/service/Admin-service/admin-orders";
 
-export default function Orders() {
-  const [listData, setlistData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(50);
+export default function Widget() {
+  const [listOrder, setListOrder] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [orderStatus, setOrderStatus] = useState("All");
+  const [openOrderId, setOpenOrderId] = useState(null);
 
-  const fetchData = async (page = 1) => {
+  const fetchData = async () => {
     try {
-      const res = await getListOrders(page, itemsPerPage); // Giả sử API hỗ trợ phân trang
-      setlistData(res?.result);
-      setTotalItems(res?.totalItems || 0);
+      const res = await getListOrdersAdmin();
+      setListOrder(res?.result || []);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData();
+  }, []);
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  useEffect(() => {
+    filterOrders();
+  }, [orderStatus, listOrder]);
+
+  const filterOrders = () => {
+    if (orderStatus === "All") {
+      setFilteredOrders(listOrder);
+    } else {
+      setFilteredOrders(
+        listOrder.filter((order) => order.orderStatus === orderStatus)
+      );
+    }
+  };
+
+  const toggleDetail = (orderId) => {
+    setOpenOrderId(openOrderId === orderId ? null : orderId);
+  };
+
+  const handleCancel = async (orderID) => {
+    try {
+      const data = {
+        orderID: orderID,
+        orderStatus: "CANCEL",
+      };
+      const res = await CancelOrder(data);
+      console.log(res);
+      fetchData();
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+    }
+  };
+
+  const handleApprove = async (orderID) => {
+    try {
+      const data = {
+        orderID: orderID,
+        orderStatus: "APPROVED",
+      };
+      const res = await ApproveOrder(data); 
+      console.log(res);
+      fetchData();
+    } catch (error) {
+      console.error("Error approving order:", error);
+    }
+  };
+
+  const handleDone = async (orderID) => {
+    try {
+      
+      const res = await DoneOrder(orderID); 
+      console.log(res);
+      fetchData();
+    } catch (error) {
+      console.error("Error marking order as done:", error);
+    }
+  };
 
   return (
-    <div
-      className="p-4 bg-card text-card-foreground bg-slate-100"
-      style={{ marginLeft: "256px" }}
-    >
-      <h2 className="text-xl font-semibold mb-4">List Orders</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-border rounded-md">
-          <thead className="bg-stone-500 text-primary-foreground">
-            <tr>
-              <th className="px-4 py-2 border border-border">#</th>
-              <th className="px-4 py-2 border border-border">Ảnh</th>
-              <th className="px-4 py-2 border border-border">Mã sản phẩm</th>
-              <th className="px-4 py-2 border border-border">Tên Sản Phẩm</th>
-              <th className="px-4 py-2 border border-border">Còn lại</th>
-              <th className="px-4 py-2 border border-border">Số tiền</th>
-              <th className="px-4 py-2 border border-border">Hãng</th>
-              <th className="px-4 py-2 border border-border">Bảo hành</th>
-              <th className="px-4 py-2 border border-border">Quản lý</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listData?.map((data, index) => (
-              <tr key={index}>
-                <td className="px-1 py-1 text-center border">
-                  {index + 1 + (currentPage - 1) * itemsPerPage}
-                </td>
-                <td className="px-1 py-1 text-center border">
-                  <Image
-                    src={
-                      data?.imageLink ||
-                      "https://maytinh.sharekhoahoc.vn/wp-content/uploads/2021/12/8530d87af9fc1bf1a3617728d8954b16_63b594ba72d04e3bb9688047fa42ab2f_master-400x400.jpg"
-                    }
-                    unoptimized
-                    alt={data.productName || "Product Image"}
-                    width={100}
-                    height={100}
-                    className="bg-center bg-contain"
-                  />
-                </td>
-                <td className="px-1 py-1 text-center border">
-                  {data.productId}
-                </td>
-                <td className="px-1 py-1 text-center border">
-                  {data.productName}
-                </td>
-                <td
-                  className={`px-1 py-1 text-center border ${
-                    data.tdp > 0 ? "text-green-500" : "text-red-500"
-                  }`}
+    <div className="p-6 bg-background ml-64">
+      <h2 className="text-2xl font-semibold mb-4">Order List</h2>
+      <div className="flex space-x-4 mb-6">
+        <button
+          className="bg-secondary text-secondary-foreground p-2 rounded active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+          onClick={() => setOrderStatus("All")}
+        >
+          All ({listOrder.length})
+        </button>
+        <button
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
+          onClick={() => setOrderStatus("PENDING")}
+        >
+          Pending
+        </button>
+        <button
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
+          onClick={() => setOrderStatus("APPROVED")}
+        >
+          Approved
+        </button>
+        <button
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300"
+          onClick={() => setOrderStatus("DONE")}
+        >
+          Done
+        </button>
+        <button
+          className="bg-muted text-muted-foreground p-2 rounded active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300"
+          onClick={() => setOrderStatus("CANCEL")}
+        >
+          Cancel
+        </button>
+      </div>
+
+      {filteredOrders.map((order) => (
+        <Collapsible key={order.orderID} open={openOrderId === order.orderID}>
+          <div className="border-b border-border pb-4 mb-4">
+            <div className="flex justify-between">
+              <div>
+                <h3 className="text-lg font-medium">
+                  Order ID: {order.orderID}
+                </h3>
+                <h3 className="text-lg font-medium">
+                  Created At: {order.orderDate}
+                </h3>
+                <h3 className="text-lg font-medium">
+                  Created By: {order.orderAddress}
+                </h3>
+              </div>
+              <div
+                className={`text-lg font-medium ${
+                  order.orderStatus === "CANCEL"
+                    ? "text-red-500"
+                    : order.orderStatus === "PENDING" ||
+                      order.orderStatus === "APPROVE"
+                    ? "text-green-500"
+                    : ""
+                }`}
+              >
+                Order Status: {order.orderStatus}
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <CollapsibleTrigger asChild>
+                <button
+                  className="bg-blue-500 text-primary-foreground p-2 rounded text-center"
+                  onClick={() => toggleDetail(order.orderID)}
                 >
-                  <span>{data.tdp}</span>
-                </td>
-                <td className="px-1 py-1 text-center border">{data.price}</td>
-                <td className="px-1 py-1 text-center border">
-                  <span>{data.brand}</span>
-                </td>
-                <td className="px-1 py-1 text-center border">
-                  {data.warranty}
-                </td>
-                <td className="px-1 py-1 text-center border text-black">
-                  <i className="fa-solid fa-pencil"></i>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="flex items-center justify-between mt-4">
-        <span className="text-sm">
-          Hiện {itemsPerPage * (currentPage - 1) + 1} đến{" "}
-          {Math.min(itemsPerPage * currentPage, totalItems)} trong {totalItems}{" "}
-          mục
-        </span>
-        <div className="flex items-center gap-2">
-          <button
-            className="px-2 py-1 border border-border rounded-md"
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            «
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              className={`px-2 py-1 border border-border rounded-md ${
-                currentPage === i + 1
-                  ? "bg-primary text-primary-foreground"
-                  : ""
-              }`}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="px-2 py-1 border border-border rounded-md"
-            onClick={() =>
-              setCurrentPage(prev => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          >
-            »
-          </button>
-          <span>Hiện</span>
-          <select
-            className="border border-input rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary sm:text-sm"
-            value={itemsPerPage}
-            disabled
-          >
-            <option>10</option>
-          </select>
-          <span>mục</span>
-        </div>
-      </div>
+                  Detail
+                </button>
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent asChild>
+              <div>
+                {order.orderItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-4"
+                  >
+                    <div className="flex items-center">
+                      <img
+                        src={item.imageLink}
+                        alt={item.productName}
+                        className="mr-4"
+                        style={{ width: 100, height: 100 }}
+                      />
+                      <div>
+                        <h4 className="font-semibold">{item.productName}</h4>
+                        <p>{item.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-4">
+                        {item.quantity} × {item.price.toLocaleString()} VND
+                      </span>
+                      <span className="font-semibold">
+                        {(item.quantity * item.price).toLocaleString()} VND
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {order.orderStatus === "PENDING" && (
+                  <>
+                    <div className="flex space-x-4">
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button className="bg-red-500 text-primary-foreground p-2 rounded text-center">
+                            Cancel order
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Confirm Cancellation
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to cancel this order? This
+                              action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              className="bg-blue-500"
+                              onClick={() => handleCancel(order.orderID)}
+                            >
+                              Confirm
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+
+                      <button
+                        className="bg-green-500 text-primary-foreground p-2 rounded text-center"
+                        onClick={() => handleApprove(order.orderID)}
+                      >
+                        Approve order
+                      </button>
+                    </div>
+                  </>
+                )}
+                {order.orderStatus === "APPROVED" && (
+                  <button
+                    className="bg-green-500 text-primary-foreground p-2 rounded text-center mt-4"
+                    onClick={() => handleDone(order.orderID)}
+                  >
+                    Mark as Done
+                  </button>
+                )}
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
+      ))}
     </div>
   );
 }

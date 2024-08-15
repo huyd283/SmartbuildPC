@@ -59,7 +59,41 @@ export const CancelOrder = async (body) => {
   }
 };
 
-
+export const ApproveOrder = async (body) => {
+  try {
+    const response = await jwtInterceptor('Order/ApproveOrder', {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      console.log(response)
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error posting data:', error);
+    return error;
+  }
+};
+export const DoneOrder = async (id) => {
+  try {
+    const response = await jwtInterceptor('Order/DoneOrder/' + id, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      console.log(response)
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error posting data:', error);
+    return error;
+  }
+};
 export const searchProductbyDes = async (searchProduct) => {
   try {
     if(searchProduct){

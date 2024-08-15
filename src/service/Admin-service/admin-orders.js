@@ -1,8 +1,8 @@
 import { jwtInterceptor } from "../jwtInterceptor";
 
-export const getListOrders = async (id) => {
+export const getListOrdersAdmin = async () => {
     try {
-      const response = await jwtInterceptor('Order/ListOrderCustomer');
+      const response = await jwtInterceptor('Order/ListOrderAdmin');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

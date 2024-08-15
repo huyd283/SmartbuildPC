@@ -22,6 +22,9 @@ const productSlice = createSlice({
     updateTotalPrice: (state, action) => {
       state.totalPrice += action.payload;
     },
+    decreTotalPrice: (state, action) => {
+      state.totalPrice -= action.payload;
+    },
     resetTotalPrice: (state) => {
       state.totalPrice = 0;
     },
@@ -29,5 +32,5 @@ const productSlice = createSlice({
   },
 });
 
-export const { setSelectedProduct, resetSelectedProduct, removeSelectedProduct,updateTotalPrice,resetTotalPrice} = productSlice.actions;
+export const { setSelectedProduct, resetSelectedProduct, removeSelectedProduct,updateTotalPrice,resetTotalPrice,decreTotalPrice} = productSlice.actions;
 export default productSlice.reducer;
