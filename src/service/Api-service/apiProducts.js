@@ -109,6 +109,48 @@ export const getDetailProduct = async (id) => {
 };
 
 
+export const createBill = async (data) => {
+  try {
+    const response = await jwtInterceptor('/Bill/CreateBill', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error posting data:', error);
+    return error;
+  }
+};
+
+
+export const exportBill = async (id) => {
+  try {
+    const response = await jwtInterceptor('Bill/ExportBill/' + id, {
+      method: 'GET',
+    
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+   
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.text();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return error;
+  }
+};
+
+
+
 
 export const filterProducts = async (body) => {
   try {

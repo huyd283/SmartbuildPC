@@ -2,24 +2,21 @@
 import "../../../css/style2020_zip.css"
 import "../../../css/media2020.css"
 import "../../../css/otherstyle2020.css"
+
 import { useEffect, useState } from "react";
 import { getDetailProduct } from "@/service/Api-service/apiProducts";
 
-
+import Cookies from 'js-cookie';
+import toast from "react-hot-toast";
 
 export default function ProductDetal() {
   const [productdetail,setProductDetail] = useState("");
     useEffect(() => {
       const fetchData = async() => {
-      
         const queryString = window.location.search;
-
-   
-        // Xử lý nếu query string không tồn tại
         if (!queryString) {
           return;
         }
-        // Xử lý nếu query string có tồn tại
         const urlParams = new URLSearchParams(queryString);
         const searchQuery = urlParams.get('idProduct');
        
@@ -30,6 +27,29 @@ export default function ProductDetal() {
     fetchData();
      
     },[])
+   
+    const onOk = () => {
+      const existingItemsStr = Cookies.get('selectedItem');
+      let existingItems = [];
+    
+      if (existingItemsStr) {
+        try {
+          existingItems = JSON.parse(decodeURIComponent(existingItemsStr));
+        } catch (e) {
+          console.error("Error parsing JSON from cookie:", e);
+        }
+      }
+      const existingItem = existingItems.find(i => i.productId === productdetail.productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        existingItems.push({ ...productdetail, quantity: 1 });
+      }
+      const selectedItemStr = JSON.stringify(existingItems);
+      Cookies.set('selectedItem', encodeURIComponent(selectedItemStr), { expires: 7 });
+      toast.success("Product has been added to the cart!");
+    };
+    
 
 
     return (
@@ -121,7 +141,7 @@ export default function ProductDetal() {
                           onclick="listenBuyProDetail('80652',0,1,'','/cart?step=3')"
                           className="mua-ngay th1"
                         >
-                          <span>Order Now</span> Fast delivery, free of charge
+                          <span onClick={onOk}>Order Now</span> Fast delivery, free of charge
                           nationally
                         </a>
                       </div>

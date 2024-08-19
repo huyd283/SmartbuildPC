@@ -17,6 +17,8 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { createBill, exportBill } from "@/service/Api-service/apiProducts";
+import { downloadTxtFile } from "@/service/convert/convertFile";
 
 export default function Widget() {
   const [listOrder, setListOrder] = useState([]);
@@ -70,6 +72,18 @@ export default function Widget() {
     const formattedDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
   
     return `${formattedTime} - ${formattedDate}`;
+  }
+  const xuatFile = async(orderId) => {
+      const body = {
+        "orderId": orderId,
+        "billDate": "2024-08-18T17:02:52.368Z",
+        "taxIn": 0,
+        "address": ""
+      }
+     const response =  await createBill(body);
+     const responseexport = await exportBill(response.result)
+     await downloadTxtFile(responseexport)
+     
   }
   const handleCancel = async (orderID) => {
     try {
@@ -157,6 +171,16 @@ export default function Widget() {
                 >
                   Detail
                 </button>
+                
+              </CollapsibleTrigger>
+              <CollapsibleTrigger asChild>
+                <button
+                  className="bg-blue-500 text-primary-foreground p-2 rounded text-center"
+                  onClick={() => xuatFile(order.orderID)}
+                >
+                  Xuất file
+                </button>
+                
               </CollapsibleTrigger>
             </div>
             <CollapsibleContent asChild>

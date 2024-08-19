@@ -1,5 +1,5 @@
 "use client";
-import { ApproveOrder, CancelOrder, DoneOrder } from "@/service/Api-service/apiOrders";
+import { ApproveOrder, CancelOrder, DoneOrder, SendBill } from "@/service/Api-service/apiOrders";
 import { useEffect, useState } from "react";
 import {
   Collapsible,
@@ -18,6 +18,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { getListOrdersAdmin } from "@/service/Admin-service/admin-orders";
+import toast from "react-hot-toast";
 
 export default function Widget() {
   const [listOrder, setListOrder] = useState([]);
@@ -87,8 +88,9 @@ export default function Widget() {
   const handleDone = async (orderID) => {
     try {
       
-      const res = await DoneOrder(orderID); 
-      console.log(res);
+      const resDone = await DoneOrder(orderID); 
+      const resBill = await SendBill(orderID); 
+      // toast.success(resBill.message)
       fetchData();
     } catch (error) {
       console.error("Error marking order as done:", error);

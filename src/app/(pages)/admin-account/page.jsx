@@ -18,7 +18,7 @@ export default function Account() {
   };
   useEffect(() => {
     fetchData();
-  }, [listData]);
+  }, []);
 
   const changeUnbanStatus = async(id) => {
     const body = {

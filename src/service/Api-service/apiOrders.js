@@ -94,6 +94,23 @@ export const DoneOrder = async (id) => {
     return error;
   }
 };
+export const SendBill = async (id) => {
+  try {
+    const response = await jwtInterceptor('Order/SendBill/' + id, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      console.log(response)
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error posting data:', error);
+    return error;
+  }
+};
 export const searchProductbyDes = async (searchProduct) => {
   try {
     if(searchProduct){
