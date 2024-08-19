@@ -4,6 +4,7 @@ import { getDataCate, getDataStore } from "@/service/Api-service/apiCategorys";
 import {
   GetAllProducts,
   deleteProduct,
+  getTagbyCategory,
   updateProduct,
 } from "@/service/Admin-service/admin-product";
 import { useState, useEffect } from "react";
@@ -17,7 +18,10 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { TreeSelect } from "antd";
+import toast from "react-hot-toast";
 
+const { TreeNode } = TreeSelect;
 export default function Product() {
   const [listData, setListData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -38,7 +42,8 @@ export default function Product() {
   const [productQuantity, setProductQuantity] = useState("");
   const [productImage, setProductImage] = useState(null);
   const [productId, setProductId] = useState(null);
-  
+  const [dataTreeselect, setDataTreeselect] = useState([]);
+
   const fetchDataCate = async () => {
     try {
       const res = await getDataCate();
@@ -48,16 +53,40 @@ export default function Product() {
       console.error("Error fetching data:", error);
     }
   };
-  const fetchData = async (page = 1) => {
+  const fetchData = async (page = 1, category = "") => {
     try {
-      const res = await GetAllProducts({ page, limit: itemsPerPage });
+      const res = await GetAllProducts({ page, limit: itemsPerPage, category });
       setListData(res?.result?.products);
       setTotalItems(res?.result?.totalItems || 0);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+  useEffect(() => {
+    const fetchDataTag = async (categoryId) => {
+      setProductTag([]);
+      try {
+        const res = await getTagbyCategory(categoryId);
+        const mappedData = res.result.map((item) => ({
+          title: item.name,
+          value: item.name,
+          key: item.name,
+          children: item.values.map((value) => ({
+            title: value,
+            value: value,
+            key: value,
+          })),
+        }));
+        setDataTreeselect(mappedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    if (productCategory) {
+      fetchDataTag(productCategory);
+    }
+  }, [productCategory]);
   const handleDelete = async (productId) => {
     try {
       await deleteProduct(productId);
@@ -69,21 +98,20 @@ export default function Product() {
 
   const handleEdit = (product) => {
     console.log(product);
-     setProductId(product.productId)
-     setProductBrand(product.brand)
-     setProductCategory(product.categoryID)
-     setProductDescription(product.description)
-     setProductImage(product.imageLink)
-     setProductName(product.productName)
-     setProductPrice(product.price)
-     setProductQuantity
-     setProductStatus
-     setProductTPD(product.tdp)
-     setProductTag(product.tag)
-     setProductWarranty(product.warranty)
+    setProductId(product.productId);
+    setProductBrand(product.brand);
+    setProductCategory(product.categoryID);
+    setProductDescription(product.description);
+    setProductImage(product.imageLink);
+    setProductName(product.productName);
+    setProductPrice(product.price);
+    setProductQuantity;
+    setProductStatus;
+    setProductTPD(product.tdp);
+    setProductTag(product.tag);
+    setProductWarranty(product.warranty);
     setIsEditModalOpen(true);
   };
-
 
   const handleUpdateProduct = async () => {
     try {
@@ -99,14 +127,16 @@ export default function Product() {
       formData.append("CategoryID", productCategory);
       formData.append("Quantity", productQuantity);
       formData.append("ImageFile", productImage);
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
+      const response = await updateProduct(productId, formData);
+      if (response.statusCode === 200 || response.statusCode === 201) {
+        setIsEditModalOpen(false);
+        fetchData(currentPage);
+        toast.success("Sửa sản phẩm thành công");
+      } else {
+        toast.error(response.title);
       }
-      await updateProduct(productId, formData);
-      setIsEditModalOpen(false);
-      fetchData(currentPage);
     } catch (error) {
-      console.error("Error updating product:", error);
+      toast.error("Sửa sản phẩm thất bại");
     }
   };
   const handleImageChange = (e) => {
@@ -119,15 +149,51 @@ export default function Product() {
   };
   useEffect(() => {
     fetchData(currentPage);
-    fetchDataCate()
+    fetchDataCate();
   }, [currentPage, itemsPerPage]);
-
+  const onChangeTag = (newValue) => {
+    if (productCategory === "2") {
+      const uniqueValues = new Set(newValue.map((val) => val.split("-")[0]));
+      const filteredValues = Array.from(uniqueValues).flatMap((key) => {
+        return newValue.filter((val) => val.startsWith(key)).slice(0, 1);
+      });
+      setProductTag(filteredValues);
+    } else {
+      setProductTag(newValue);
+    }
+  };
+  const handleCategoryChange = (categoryId) => {
+    fetchData(currentPage, categoryId);
+  };
   return (
     <div
       className="p-4 bg-card text-card-foreground bg-slate-100"
       style={{ marginLeft: "256px" }}
     >
-      <h2 className="text-xl font-semibold mb-4">Danh Sách Sản Phẩm</h2>
+      <div className="flex justify-between mb-4">
+        <h2 className="text-xl font-semibold">Danh Sách Sản Phẩm</h2>
+        <div className="flex items-center">
+          <label
+            htmlFor="category-filter"
+            className="mr-2 text-primary font-semibold"
+          >
+            Lọc theo danh mục:
+          </label>
+          <select
+            id="category-filter"
+            className="p-2 border border-border rounded"
+            value={productCategory}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+          >
+            <option value="">Tất cả danh mục</option>
+            {listCate.map((item) => (
+              <option key={item.categoryId} value={item.categoryId}>
+                {item.categoryName}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-border rounded-md">
           <thead className="bg-stone-500 text-primary-foreground">
@@ -168,10 +234,10 @@ export default function Product() {
                 </td>
                 <td
                   className={`px-1 py-1 text-center border ${
-                    data.tdp > 0 ? "text-green-500" : "text-red-500"
+                    data.quantity > 0 ? "text-green-500" : "text-red-500"
                   }`}
                 >
-                  <span>{data.tdp}</span>
+                  <span>{data.quantity}</span>
                 </td>
                 <td className="px-1 py-1 text-center border">{data.price}</td>
                 <td className="px-1 py-1 text-center border">
@@ -234,6 +300,68 @@ export default function Product() {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Sửa Sản Phẩm</h2>
             <formData>
+              <div className="mb-4">
+                <label
+                  htmlFor="product-category"
+                  className="block text-primary font-semibold mb-2"
+                >
+                  Danh mục sản phẩm
+                </label>
+                <select
+                  id="product-category"
+                  className="w-full p-2 border border-border rounded"
+                  value={productCategory}
+                  onChange={(e) => setProductCategory(e.target.value)}
+                  required
+                >
+                  <option value="">Chọn danh mục</option>
+                  {listCate.map((item) => (
+                    <option key={item.categoryId} value={item.categoryId}>
+                      {item.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="product-tag"
+                  className="block text-primary font-semibold mb-2"
+                >
+                  Tag
+                </label>
+                <TreeSelect
+                  showSearch
+                  style={{ width: "100%" }}
+                  value={productTag}
+                  dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+                  placeholder="Please select"
+                  allowClear
+                  treeDefaultExpandAll
+                  multiple={
+                    productCategory === "9" ||
+                    productCategory === "2" ||
+                    productCategory === "7"
+                  }
+                  onChange={onChangeTag}
+                >
+                  {dataTreeselect?.map((item) => (
+                    <TreeNode
+                      key={item.key}
+                      value={`${item.key}-${item.value}`}
+                      title={item.title}
+                    >
+                      {item.children &&
+                        item.children.map((child) => (
+                          <TreeNode
+                            key={child.key}
+                            value={`${item.key}-${child.value}`}
+                            title={child.title}
+                          />
+                        ))}
+                    </TreeNode>
+                  ))}
+                </TreeSelect>
+              </div>
               <div className="mb-4">
                 <label
                   htmlFor="product-name"
@@ -328,23 +456,6 @@ export default function Product() {
               </div>
               <div className="mb-4">
                 <label
-                  htmlFor="product-tag"
-                  className="block text-primary font-semibold mb-2"
-                >
-                  Tag
-                </label>
-                <input
-                  type="text"
-                  id="product-tag"
-                  className="w-full p-2 border border-border rounded"
-                  placeholder="Enter tag"
-                  value={productTag}
-                  onChange={(e) => setProductTag(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
                   htmlFor="product-tpd"
                   className="block text-primary font-semibold mb-2"
                 >
@@ -380,38 +491,16 @@ export default function Product() {
               </div>
               <div className="mb-4">
                 <label
-                  htmlFor="product-category"
-                  className="block text-primary font-semibold mb-2"
-                >
-                  Danh mục sản phẩm
-                </label>
-                <select
-                  id="product-category"
-                  className="w-full p-2 border border-border rounded"
-                  value={productCategory}
-                  onChange={(e) => setProductCategory(e.target.value)}
-                  required
-                >
-                  <option value="">Chọn danh mục</option>
-                  {listCate.map((item) => (
-                    <option key={item.categoryId} value={item.categoryId}>
-                      {item.categoryName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="product-store"
+                  htmlFor="product-quantity"
                   className="block text-primary font-semibold mb-2"
                 >
                   Số lượng
                 </label>
                 <input
                   type="number"
-                  id="product-store"
+                  id="product-quantity"
                   className="w-full p-2 border border-border rounded"
-                  placeholder="Enter quantity"
+                  placeholder="Enter số lượng"
                   value={productQuantity}
                   onChange={(e) => setProductQuantity(e.target.value)}
                   required
@@ -420,16 +509,15 @@ export default function Product() {
               <div className="mb-4">
                 <label
                   htmlFor="product-image"
-                  className="block text-primary font-semibold
- mb-2"
+                  className="block text-primary font-semibold mb-2"
                 >
-                  Ảnh sản phẩm
+                  Hình ảnh sản phẩm
                 </label>
                 <input
                   type="file"
                   id="product-image"
                   className="w-full p-2 border border-border rounded"
-                  accept=".jpg"
+                  accept="image/jpeg"
                   onChange={handleImageChange}
                   required
                 />

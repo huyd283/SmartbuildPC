@@ -34,7 +34,7 @@ export const getDetailProduct = async (id) => {
 
 export const GetAllProducts = async (body) => {
   try {
-    const response = await jwtInterceptor('Product/GetAllProducts?' + `pageNumber=${body.page}&pageSize=${body.limit}`, {
+    const response = await jwtInterceptor('Product/GetAllProducts?' + `pageNumber=${body.page}&pageSize=${body.limit}&categoryID=${body.category}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +103,18 @@ export const searchProductbyDes = async (searchProduct) => {
     return error;
   }
 };
-
+export const getTagbyCategory = async (id) => {
+  try {
+    const response = await jwtInterceptor('Category/Tag/' + id );
+    if (!response.ok) {
+      console.log('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return error;
+  }
+};
 
 export const postData = async (data) => {
   try {

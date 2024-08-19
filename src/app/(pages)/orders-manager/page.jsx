@@ -55,6 +55,22 @@ export default function Widget() {
     setOpenOrderId(openOrderId === orderId ? null : orderId);
   };
 
+  function formatDateTime(datetime) {
+    const date = new Date(datetime);
+  
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+  
+    const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+  
+    const day = date.getDate();
+    const month = date.getMonth() + 1; 
+    const year = date.getFullYear();
+  
+    const formattedDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+  
+    return `${formattedTime} - ${formattedDate}`;
+  }
   const handleCancel = async (orderID) => {
     try {
       const data = {
@@ -114,7 +130,7 @@ export default function Widget() {
                   Order ID: {order.orderID}
                 </h3>
                 <h3 className="text-lg font-medium">
-                  Created At: {order.orderDate}
+                  Created At: {formatDateTime(order.orderDate)}
                 </h3>
                 <h3 className="text-lg font-medium">
                   Created By: {order.orderAddress}

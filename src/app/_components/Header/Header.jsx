@@ -38,6 +38,7 @@ import { jwtDecode } from "jwt-decode";
 
 
 export default function Header() {
+
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCate, setSearchCate] = useState('');
@@ -83,7 +84,10 @@ export default function Header() {
     // setSearchValue(searchQuery);
 
   }
-
+  const navigate = (id) => {
+  
+    window.location.href = `/productSearch?searchCate=${id}`;
+   }
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.clear(); 
@@ -125,7 +129,7 @@ export default function Header() {
                   className="js-hover-menu li-catcha-menu"
                 >
                   <a onClick={() => navigate(item.categoryId)} className="root">
-                    {item.categoryName}
+                    {item.categoryName} 
                   </a>
                   <span className="arrow-li-catcha-menu" />
                 </li>

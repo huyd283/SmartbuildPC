@@ -2,7 +2,6 @@
 import "../../../css/style2020_zip.css"
 import "../../../css/media2020.css"
 import "../../../css/otherstyle2020.css"
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getDetailProduct } from "@/service/Api-service/apiProducts";
 
@@ -107,40 +106,7 @@ export default function ProductDetal() {
                       </ul>
                     </div>
                 
-                    <div className="box-number-quan-detail">
-                      <span className="so-luong">Quantity:</span>
-                      <span className="new-cart-quantity">
-                        <a
-                          href="javascript:void(0);"
-                          className="minor quantity-change"
-                          data-value={-1}
-                        >
-                          –
-                        </a>
-                        <input
-                          className="buy-quantity quantity-change"
-                          defaultValue={1}
-                          size={5}
-                          data-stock={6}
-                        />
-                        <a
-                          href="javascript:void(0);"
-                          className="add quantity-change"
-                          data-value={1}
-                        >
-                          +
-                        </a>
-                      </span>
-                 
-                      <a
-                        className="like-product"
-                        href="javascript:;"
-                        title="Thích sản phẩm n� y"
-                        onclick="UserAction.likeProduct('80652', 'PC HP 280 Pro Tower G9 (9H9C2PT)(i7-12700/16GB RAM/512GB SSD/WL+BT/K+M/Win11)')"
-                      >
-                        <i className="fas fa-heart" />
-                      </a>
-                    </div>
+                   
                     <div className="clear" />
                     <div
                       id="button_buy_2019" 
@@ -255,12 +221,12 @@ export default function ProductDetal() {
                         Rate: {productdetail?.productName}
                       </h2>
                       <div id="js-product-description">
-                        <p>
+                        <div>
                           <strong>Note: </strong>
                           <div>
                           The image is for reference only because the product specification may vary according to the market for each version. If you need a specific configuration, please see the technical specification sheet or ask the business before purchasing. Note: The image is for reference only because the product specification may vary according to the market for each version. If you need a specific configuration, please see the technical specification sheet or ask the business before purchasing. 
                           </div>
-                        </p>
+                        </div>
                         <h3>
                           <strong>
                               Description:
@@ -269,7 +235,7 @@ export default function ProductDetal() {
                         <p>
                         {productdetail?.description}
                         </p>
-                        <p />
+                        
                       </div>
                     </div>
                   </div>

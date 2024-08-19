@@ -96,6 +96,24 @@ export default function AdminSidebar() {
                 </span>
                 </Link>
               </li>
+              <li className="flex items-center ">
+                <Link href="/admin-account">
+                <span
+                    className={`block py-3 text-xs font-bold uppercase cursor-pointer ${
+                        lastSegment === '/admin-account' ? 'text-green-400' : 'text-white'
+                    }`}
+                    onClick={() => setActivePath('/admin-account')}
+                >
+                  <i
+                      className={`text-sm cursor-pointer ${
+                          lastSegment === '/admin-account' ? 'text-green-400' : 'text-white'
+                      }`}
+                  >
+                  Quản lý account
+                  </i>
+                </span>
+                </Link>
+              </li>
              {/* <hr className="my-4 w-full"/>
               <span className="mr-2 block pb-4 pt-1 text-xs font-bold uppercase text-info w-full">
               Bài viết tin tức
