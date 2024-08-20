@@ -171,13 +171,13 @@ export default function Cart() {
         />
         <span>Select All ({selectedItems.length} items)</span>
       </div>
-      <div className="flex">
-        <div className="w-3/4 border-r pr-4 pb-4 mb-4">
+      <div className="flex flex-col md:flex-row">
+        <div className="w-full md:w-3/4 border-r pr-4 pb-4 mb-4">
           {selectedItems.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
             selectedItems.map((item) => (
-              <div key={item.productId} className="flex items-center mb-4">
+              <div key={item.productId} className="flex flex-col md:flex-row items-center mb-4">
                 <input
                   type="checkbox"
                   className="mr-2"
@@ -198,12 +198,12 @@ export default function Cart() {
                     Product ID: {item.productId}
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right md:text-left">
                   <div className="text-lg font-bold text-red-500">
                     {item.price.toLocaleString()}₫
                   </div>
                 </div>
-                <div className="flex items-center ml-4">
+                <div className="flex items-center mt-2 md:mt-0 md:ml-4">
                   <button
                     onClick={() => handleDecrement(item.productId)}
                     className="border px-2"
@@ -223,10 +223,10 @@ export default function Cart() {
                     +
                   </button>
                 </div>
-                <div className="text-lg font-bold text-red-500 ml-4">
+                <div className="text-lg font-bold text-red-500 mt-2 md:mt-0 md:ml-4">
                   {(item.price * item.quantity).toLocaleString()}₫
                 </div>
-
+  
                 <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <AlertDialogTrigger asChild>
                     <div className="hidden" />
@@ -258,7 +258,7 @@ export default function Cart() {
             ))
           )}
         </div>
-        <div className="w-1/4 pl-4">
+        <div className="w-full md:w-1/4 pl-4">
           <div className="border-t pt-4">
             <div className="flex justify-between mb-2">
               <span>Subtotal</span>
@@ -298,4 +298,5 @@ export default function Cart() {
       </div>
     </div>
   );
+  
 }

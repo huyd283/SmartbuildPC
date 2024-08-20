@@ -32,4 +32,20 @@ export const editUser = async (data) => {
       return error;
     }
   };
+ 
+  export const createUser = async (data) => {
+    try {
+      const response = await jwtInterceptor('Account/AddAccount', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error posting data:', error);
+      return error;
+    }
+  };
   

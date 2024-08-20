@@ -29,17 +29,29 @@ import { ProductItem, ProductSelectedItem } from ".";
 import { useSelector } from "react-redux";
 import Filter from "./Filter";
 import toast from "react-hot-toast";
-import { setSelectedProduct, removeSelectedProduct, decreTotalPrice } from "@/app/_utils/store/product.slice";
+import {
+  setSelectedProduct,
+  removeSelectedProduct,
+  decreTotalPrice,
+} from "@/app/_utils/store/product.slice";
 import { useDispatch } from "react-redux";
 
-export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected, onQuantityChange }) {
+export default function ConfigItem({
+  item,
+  onPriceChange,
+  onRefresh,
+  onSelected,
+  onQuantityChange,
+}) {
   const options = [
     { value: "newest", label: "Latest" },
     { value: "expensive", label: "Price high to low" },
     { value: "cheap", label: "Price low to high" },
   ];
   const dispatch = useDispatch();
-  const selectedProduct = useSelector((state) => state.product.selectedProductIds);
+  const selectedProduct = useSelector(
+    (state) => state.product.selectedProductIds
+  );
   const [selectedSearch, setSelectedSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
@@ -48,8 +60,8 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleQuantityChange = (item, quantityItem) => {
-    setQuantityItem(quantityItem)
-    onQuantityChange(item, quantityItem); 
+    setQuantityItem(quantityItem);
+    onQuantityChange(item, quantityItem);
     onPriceChange();
   };
 
@@ -73,8 +85,8 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
     setSelectedItem(null);
     dispatch(removeSelectedProduct(selectedItem.productId));
     console.log(selectedItem.price);
-    
-    dispatch(decreTotalPrice(selectedItem?.price)); 
+
+    dispatch(decreTotalPrice(selectedItem?.price));
     toast.success("Deleted successfully");
   };
 
@@ -103,10 +115,10 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
   }, [onRefresh]);
   useEffect(() => {
     if (selectedItem && quantityItem !== null) {
-      onPriceChange(selectedItem.price, 'update', quantityItem);
+      onPriceChange(selectedItem.price, "update", quantityItem);
     }
   }, [selectedItem, quantityItem]);
-  
+
   return (
     <Collapsible open={true}>
       <div className="w-full flex flex-col md:flex-row items-center justify-between float-left border p-4 rounded-sm">
@@ -118,7 +130,10 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
         <div className="w-full md:w-4/5 flex items-center justify-center md:justify-end py-4">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-red-600 hover:bg-red-500 w-full md:w-auto" onClick={() => setIsDialogOpen(true)}>
+              <Button
+                className="bg-red-600 hover:bg-red-500 w-full md:w-auto"
+                onClick={() => setIsDialogOpen(true)}
+              >
                 Select
               </Button>
             </DialogTrigger>
@@ -155,14 +170,14 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="w-full flex gap-x-3 max-h-[450px] lg:max-h-[500px] 2xl:max-h-[550px] overflow-y-scroll">
-                  <div className="w-1/4">
+                <div className="w-full flex flex-col lg:flex-row gap-3 max-h-[450px] lg:max-h-[500px] 2xl:max-h-[550px] overflow-y-scroll">
+                  <div className="w-full lg:w-1/4">
                     <Filter
                       id={item?.categoryId}
                       onFilterSelected={handleFilterSelected}
                     />
                   </div>
-                  <div className="w-3/4">
+                  <div className="w-full lg:w-3/4">
                     <ProductItem
                       id={item?.categoryId}
                       onProductSelected={handleProductSelected}
@@ -181,7 +196,11 @@ export default function ConfigItem({ item, onPriceChange, onRefresh, onSelected,
       <CollapsibleContent asChild>
         <div>
           {selectedItem ? (
-            <ProductSelectedItem item={selectedItem} onRemove={handleRemove} onQuantityChange={handleQuantityChange} />
+            <ProductSelectedItem
+              item={selectedItem}
+              onRemove={handleRemove}
+              onQuantityChange={handleQuantityChange}
+            />
           ) : (
             <div>No product is selected</div>
           )}

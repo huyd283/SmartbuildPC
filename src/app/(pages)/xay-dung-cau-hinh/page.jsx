@@ -39,9 +39,9 @@ export default function BuildConfig() {
       return;
     }
     if (action === 'add') {
-      dispatch(updateTotalPrice(price * quantityItem)); // Dispatch cập nhật totalPrice
+      dispatch(updateTotalPrice(price * quantityItem)); 
     } else if (action === 'remove') {
-      dispatch(updateTotalPrice(-price * quantityItem)); // Dispatch cập nhật totalPrice
+      dispatch(updateTotalPrice(-price * quantityItem)); 
     }
   };
 
@@ -49,17 +49,17 @@ export default function BuildConfig() {
     const existingItem = selectedItem.find(i => i.productId === item.productId);
     if (existingItem) {
       const newTotalPrice = totalPrice - (existingItem.price * (existingItem.quantity || 1)) + (item.price * quantity);
-      dispatch(updateTotalPrice(newTotalPrice - totalPrice)); // Chỉ dispatch phần thay đổi
+      dispatch(updateTotalPrice(newTotalPrice - totalPrice)); 
       existingItem.quantity = quantity;
     } else {
       const newTotalPrice = item.price * quantity;
-      dispatch(updateTotalPrice(newTotalPrice)); // Dispatch thêm giá mới
+      dispatch(updateTotalPrice(newTotalPrice));
       setSelectedItem([...selectedItem, item]);
     }
   };
 
   const onRefresh = () => {
-    dispatch(resetTotalPrice()); // Dispatch để reset totalPrice
+    dispatch(resetTotalPrice()); 
     setRefreshFlag((prev) => !prev);
     toast.success("Configuration refresh successful!");
   };

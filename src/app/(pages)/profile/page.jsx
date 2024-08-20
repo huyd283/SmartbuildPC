@@ -21,8 +21,6 @@ export default function Widget() {
   const fetchDataUser = async () => {
     try {
       const res = await getDataProfile();
-      console.log(res);
-
       setDatUser(res?.result);
       setEditData({
         fullName: res?.result?.fullName || "",
@@ -58,7 +56,12 @@ export default function Widget() {
     e.preventDefault();
     try {
       const res = await editUser(editData);
-      toast.success(res.message);
+      console.log(res);
+      if(res.statusCode === 200 || res.statusCode === 201){
+        toast.success(res.message);
+      } else {
+        toast.error(res.errorMessages);
+      }
     } catch (error) {
       toast.error("Chỉnh sửa thất bại");
       console.error("Error submitting edit:", error);
