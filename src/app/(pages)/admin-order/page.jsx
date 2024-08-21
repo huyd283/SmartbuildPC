@@ -19,13 +19,26 @@ import {
 } from "@/components/ui/alert-dialog";
 import { getListOrdersAdmin } from "@/service/Admin-service/admin-orders";
 import toast from "react-hot-toast";
+import { createBill, exportBill } from "@/service/Api-service/apiProducts";
+import { downloadTxtFile } from "@/service/convert/convertFile";
 
 export default function Widget() {
   const [listOrder, setListOrder] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [orderStatus, setOrderStatus] = useState("All");
   const [openOrderId, setOpenOrderId] = useState(null);
-
+  const xuatFile = async(orderId) => {
+    const body = {
+      "orderId": orderId,
+      "billDate": "2024-08-18T17:02:52.368Z",
+      "taxIn": 0,
+      "address": ""
+    }
+   const response =  await createBill(body);
+   const responseexport = await exportBill(response.result)
+   await downloadTxtFile(responseexport)
+   
+}
   const fetchData = async () => {
     try {
       const res = await getListOrdersAdmin();
@@ -170,6 +183,17 @@ export default function Widget() {
                   Detail
                 </button>
               </CollapsibleTrigger>
+              {order.orderStatus === "DONE" && (
+                  <CollapsibleTrigger asChild>
+                  <button
+                      className="bg-blue-500 text-primary-foreground p-2 rounded text-center"
+                      onClick={() => xuatFile(order.orderID)}
+                    >
+                      Xuất file
+                    </button>
+                  </CollapsibleTrigger>
+                )}
+              
             </div>
             <CollapsibleContent asChild>
               <div>

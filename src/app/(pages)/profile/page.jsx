@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { editUser, getDataProfile } from "@/service/Api-service/apiAccount";
+import { changePassword, editUser, getDataProfile } from "@/service/Api-service/apiAccount";
 import toast from "react-hot-toast";
 import Modal from "antd/es/modal/Modal";
 
@@ -13,9 +13,9 @@ export default function Widget() {
   });
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    oldPass: "",
+    newPass: "",
+    resetPass: "",
   });
 
   const fetchDataUser = async () => {
@@ -51,7 +51,9 @@ export default function Widget() {
       [id]: value,
     }));
   };
-
+  const exitPopup = () => {
+    setShowChangePasswordModal(false);
+  }
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -70,20 +72,26 @@ export default function Widget() {
 
   const handleChangePasswordSubmit = async (e) => {
     e.preventDefault();
-    console.log(passwordData);
-    // Xử lý logic đổi mật khẩu ở đây
-    try {
-      // Ví dụ gọi API đổi mật khẩu ở đây
-      // const res = await changePassword(passwordData);
-      // toast.success(res.message);
-      toast.success("Password changed successfully!");
-      setShowChangePasswordModal(false);
-    } catch (error) {
-      toast.error("Đổi mật khẩu thất bại");
-      console.error("Error changing password:", error);
+    console.log(passwordData.newPass , passwordData.resetPass);
+    
+    if(passwordData.newPass === passwordData.resetPass){
+      try {
+        const res = await changePassword(passwordData);
+        if(res.statusCode === 200 || res.statusCode === 201) {
+          toast.success("Password changed successfully!");
+          setShowChangePasswordModal(false);
+        } else {
+          toast.error(res.errorMessages)
+        }
+      } catch (error) {
+        toast.error("Đổi mật khẩu thất bại");
+        console.error("Error changing password:", error);
+      }
+    } else {
+      toast.error("Mật khẩu nhập lại không khớp");
+
     }
   };
-
   return (
     <div className="max-w-lg mx-auto p-6 bg-card rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4 text-center">
@@ -191,54 +199,61 @@ export default function Widget() {
               <div className="mb-4">
                 <label
                   className="block text-sm font-medium text-muted-foreground"
-                  htmlFor="oldPassword"
+                  htmlFor="oldPass"
                 >
                   Mật khẩu cũ
                 </label>
                 <input
                   className="mt-1 block w-full border border-border rounded-md p-2"
                   type="password"
-                  id="oldPassword"
-                  value={passwordData.oldPassword}
+                  id="oldPass"
+                  value={passwordData.oldPass}
                   onChange={handlePasswordChange}
                 />
               </div>
               <div className="mb-4">
                 <label
                   className="block text-sm font-medium text-muted-foreground"
-                  htmlFor="newPassword"
+                  htmlFor="newPass"
                 >
                   Mật khẩu mới
                 </label>
                 <input
                   className="mt-1 block w-full border border-border rounded-md p-2"
                   type="password"
-                  id="newPassword"
-                  value={passwordData.newPassword}
+                  id="newPass"
+                  value={passwordData.newPass}
                   onChange={handlePasswordChange}
                 />
               </div>
               <div className="mb-4">
                 <label
                   className="block text-sm font-medium text-muted-foreground"
-                  htmlFor="confirmPassword"
+                  htmlFor="resetPass"
                 >
                   Nhập lại mật khẩu mới
                 </label>
                 <input
                   className="mt-1 block w-full border border-border rounded-md p-2"
                   type="password"
-                  id="confirmPassword"
-                  value={passwordData.confirmPassword}
+                  id="resetPass"
+                  value={passwordData.resetPass}
                   onChange={handlePasswordChange}
                 />
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-between">
+              <button
+                  type="button"
+                  className="bg-red-500 text-white hover:bg-red-500/80 px-4 py-2 rounded-md"
+                  onClick={exitPopup}
+                >
+                  Exit
+                </button>
                 <button
                   type="submit"
                   className="bg-emerald-500 text-white hover:bg-emerald-500/80 px-4 py-2 rounded-md"
                 >
-                  Xác nhận
+                  Confirm
                 </button>
               </div>
             </form>

@@ -32,12 +32,14 @@ export const editUser = async (data) => {
       return error;
     }
   };
- 
   export const createUser = async (data) => {
     try {
       const response = await jwtInterceptor('Account/AddAccount', {
         method: 'POST',
         body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -49,3 +51,21 @@ export const editUser = async (data) => {
     }
   };
   
+  export const changePassword = async (data) => {
+    try {
+      const response = await jwtInterceptor('Account/ChangePassword', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error posting data:', error);
+      return error;
+    }
+  };

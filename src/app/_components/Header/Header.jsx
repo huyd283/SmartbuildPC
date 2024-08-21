@@ -44,6 +44,7 @@ export default function Header() {
   const showHeader =
     pathname === "/login" ||
     pathname === "/admin-login" ||
+    pathname === "/forgot" ||
     pathname === "/create-account"
       ? false
       : true;

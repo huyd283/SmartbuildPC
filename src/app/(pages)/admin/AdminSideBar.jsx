@@ -137,7 +137,27 @@ export default function AdminSidebar() {
                   </span>
                 </Link>
               </li>
-
+              <li className="flex items-center">
+                <Link href="/admin-profile">
+                  <span
+                    className={`block py-3 text-xs font-bold uppercase cursor-pointer ${
+                      lastSegment === "/admin-profile"
+                        ? "text-green-400"
+                        : "text-white"
+                    }`}
+                    onClick={() => setActivePath("/admin-profile")}
+                  >
+                    <i
+                      className={`text-sm cursor-pointer ${
+                        lastSegment === "/admin-profile"
+                          ? "text-green-400"
+                          : "text-white"
+                      }`}
+                    >Setting
+                    </i>
+                  </span>
+                </Link>
+              </li>
               <hr className="my-4 w-full" />
 
               <li className="flex items-center">

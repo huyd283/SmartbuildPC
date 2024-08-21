@@ -107,8 +107,8 @@ export default function Product() {
     setProductImage(product.imageLink);
     setProductName(product.productName);
     setProductPrice(product.price);
-    setProductQuantity;
-    setProductStatus;
+    setProductQuantity(product.quantity);
+    setProductStatus(product.status);
     setProductTPD(product.tdp);
     setProductTag(product.tag);
     setProductWarranty(product.warranty);
@@ -485,7 +485,7 @@ export default function Product() {
                   id="product-status"
                   className="w-full p-2 border border-border rounded"
                   value={productStatus}
-                  onChange={(e) => setProductStatus(e.target.value)}
+                  onChange={(e) => setProductStatus(parseInt(e.target.value))}
                   required
                 >
                   <option value="0">Ngừng kinh doanh</option>
