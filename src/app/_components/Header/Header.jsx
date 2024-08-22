@@ -4,6 +4,7 @@ import {
   CircleUserRound,
   LayoutGrid,
   ShoppingCart,
+  Truck,
   Wrench,
 } from "lucide-react";
 import Image from "next/image";
@@ -18,7 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { CategoryProductList, NavLinkList } from "@/app/_utils/data/data";
+import { CategoryProductList } from "@/app/_utils/data/data";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -233,6 +234,15 @@ export default function Header() {
             <Wrench color="#ffffff" size={32} />
             <span className="text-[13px] font-medium text-white w-full text-center">
               SmartBuild
+            </span>
+          </Link>
+          <Link
+            className="lg:flex flex-col items-center px-3 gap-y-1 hidden"
+            href={"/orders-manager"}
+          >
+            <Truck color="#ffffff" size={32} />
+            <span className="text-[13px] font-medium text-white w-full text-center">
+              Order
             </span>
           </Link>
           {/* Navigation mobile */}

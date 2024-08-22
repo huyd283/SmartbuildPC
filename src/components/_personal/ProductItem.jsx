@@ -6,7 +6,10 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { getData } from "@/service/Api-service/apiProducts";
 
-import { setTotalPrice, updateTotalPrice } from "@/app/_utils/store/product.slice";
+import {
+  setTotalPrice,
+  updateTotalPrice,
+} from "@/app/_utils/store/product.slice";
 import { useDispatch } from "react-redux";
 
 export default function ProductItem({
@@ -19,22 +22,21 @@ export default function ProductItem({
 }) {
   const [Dataproduct, setDataproduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; 
+  const itemsPerPage = 10;
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     const fetchData = async () => {
       const data = {
         cate_id: id,
         filters: selectedFilter,
-        smartbuild: onProductSelectedId
+        smartbuild: onProductSelectedId,
       };
       try {
         const res = await getData(data);
         setDataproduct(res.result);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
@@ -62,11 +64,14 @@ export default function ProductItem({
   const onSelected = (product) => {
     toast.success("Choose a successful product!");
     onProductSelected(product);
-    dispatch(updateTotalPrice(product?.price)); 
+    dispatch(updateTotalPrice(product?.price));
   };
 
   const formatVND = (price) => {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -86,8 +91,14 @@ export default function ProductItem({
   return (
     <div className="w-full flex flex-col gap-y-3 max-h-[300px] lg:max-h-[450px] 2xl:max-h-[600px] overflow-y-scroll">
       {currentItems?.map((item) => (
-        <div key={item.productId} className="w-full flex items-center justify-between float-left border p-4 rounded-sm">
-          <Link href={item.href || "#"} className="w-20 h-20 overflow-hidden rounded-md">
+        <div
+          key={item.productId}
+          className="w-full flex items-center justify-between float-left border p-4 rounded-sm"
+        >
+          <Link
+            href={item.href || "#"}
+            className="w-20 h-20 overflow-hidden rounded-md"
+          >
             <Image
               src={
                 item.imageLink ||
@@ -105,25 +116,45 @@ export default function ProductItem({
               {item.productName || "Product Name"}
             </h4>
             <div>
-              <span className="text-[#026db5] bg-[#0093623d] font-semibold p-1 rounded-sm">
-                {"Available"}
-              </span>
+              {item.status === 0 ? (
+                <span className="text-red-600 font-semibold">Out of Stock</span>
+              ) : (
+                <span className="text-[#026db5] bg-[#0093623d] font-semibold p-1 rounded-sm">
+                  Available
+                </span>
+              )}
             </div>
             <span className="text-red-600 font-semibold">
-                {item.price ? formatVND(item.price) : formatVND(240000)}
+              {item.price ? formatVND(item.price) : formatVND(240000)}
             </span>
           </div>
-          <div className="flex items-center justify-end py-4" onClick={() => onSelected(item)}>
-            <Button className="bg-red-600 hover:bg-red-500">Select</Button>
-          </div>
+          {item.status !== 0 && (
+            <div
+              className="flex items-center justify-end py-4"
+              onClick={() => onSelected(item)}
+            >
+              <Button className="bg-red-600 hover:bg-red-500">Select</Button>
+            </div>
+          )}
         </div>
       ))}
+
       <div className="flex justify-between mt-4">
-        <Button className="bg-gray-500 hover:bg-gray-400" onClick={goToPreviousPage} disabled={currentPage === 1}>
+        <Button
+          className="bg-gray-500 hover:bg-gray-400"
+          onClick={goToPreviousPage}
+          disabled={currentPage === 1}
+        >
           Previous
         </Button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <Button className="bg-gray-500 hover:bg-gray-400" onClick={goToNextPage} disabled={currentPage === totalPages}>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          className="bg-gray-500 hover:bg-gray-400"
+          onClick={goToNextPage}
+          disabled={currentPage === totalPages}
+        >
           Next
         </Button>
       </div>

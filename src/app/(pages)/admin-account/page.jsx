@@ -13,10 +13,13 @@ import toast from "react-hot-toast";
 export default function Account() {
   const [listData, setlistData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
   const [totalItems, setTotalItems] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
+  const [accountType, setAccountType] = useState("");
+  const [status, setStatus] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -28,10 +31,15 @@ export default function Account() {
   const [passwordError, setPasswordError] = useState("");
 
   const fetchData = async (page = 1) => {
+    const data = {
+      index: page,
+      accountType: accountType,
+      status: status,
+    };
     try {
-      const res = await ListAccountForAdmin(page, itemsPerPage);
+      const res = await ListAccountForAdmin(data);
       setlistData(res?.result);
-      setTotalItems(res?.totalItems);
+      setTotalItems(res?.totalData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -102,7 +110,9 @@ export default function Account() {
       }
     }
   };
-
+  const handleCategoryChange = (data) => {
+    fetchData(currentPage, categoryId);
+  };
   return (
     <div
       className="p-4 bg-card text-card-foreground bg-slate-100"
@@ -110,18 +120,58 @@ export default function Account() {
     >
       <h2 className="text-xl font-semibold mb-4">List Account</h2>
 
+      <div className="flex justify-between">
       <button
         onClick={handleAddNew}
         className="bg-green-500 text-white hover:bg-green-500/80 px-4 py-2 rounded-md mb-4"
       >
         Thêm mới
       </button>
-
+      <div  className="flex justify-between">
+            <div className="flex items-center">
+              <label
+                htmlFor="category-filter"
+                className="mr-2 text-primary font-semibold"
+              >
+                Lọc theo Account Type :
+              </label>
+              <select
+                id="category-filter"
+                className="p-2 border border-border rounded"
+                value={accountType}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+              >
+                <option value="">Tất cả</option>
+                <option value="STAFF">STAFF</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </div>
+            <div className="flex items-center ml-16">
+              <label
+                htmlFor="category-filter"
+                className="mr-2 text-primary font-semibold"
+              >
+                Lọc theo Status:
+              </label>
+              <select
+                id="category-filter"
+                className="p-2 border border-border rounded"
+                value={status}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+              >
+                <option value={null}>Tất cả</option>
+                <option value={0}>NOT WORKING</option>
+                <option value={1}>ACTIVE</option>
+              </select>
+            </div>
+            </div>
+      </div>
       {/* Popup thêm mới */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md w-1/2">
             <h3 className="text-lg font-semibold mb-4">Thêm tài khoản mới</h3>
+      
             <div className="mb-4">
               <label className="block text-sm font-medium">UserName</label>
               <input

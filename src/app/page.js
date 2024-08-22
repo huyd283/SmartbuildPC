@@ -108,7 +108,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -250,7 +250,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -384,7 +384,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -516,7 +516,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -646,7 +646,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -774,7 +774,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -903,7 +903,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -1036,7 +1036,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -1169,7 +1169,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -1302,7 +1302,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -1435,7 +1435,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -1568,7 +1568,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 
@@ -1701,7 +1701,7 @@ export default function Home() {
                   >
                     <div className="owl-stage-outer">
                       <div
-                        className="owl-stage flex"
+                        className="owl-stage flex justify-between"
 
                       >
 

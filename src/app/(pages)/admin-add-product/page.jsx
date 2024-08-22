@@ -95,11 +95,13 @@ export default function AddProduct() {
     formData.append("ImageFile", productImage);
 
     try {
-      const response = await createProduct(formData);
+      let response = await createProduct(formData);
       if(response.statusCode === 200 || response.statusCode === 201) {
         toast.success("Thêm sản phẩm thành công");
       }
       else {
+        console.log(response);
+        
         toast.error(response.errorMessages)
       }
     } catch (error) {

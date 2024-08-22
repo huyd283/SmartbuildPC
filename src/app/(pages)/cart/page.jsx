@@ -33,7 +33,6 @@ export default function Cart() {
           decodeURIComponent(selectedItemStr)
         );
         setSelectedItems(selectedItemArray);
-        console.log(selectedItemArray);
       } catch (e) {
         console.error("Error parsing JSON from cookie:", e);
       }

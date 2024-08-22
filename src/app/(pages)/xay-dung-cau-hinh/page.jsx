@@ -66,9 +66,10 @@ export default function BuildConfig() {
 
   const onOk = () => {
     const existingItemsStr = Cookies.get('selectedItem');
+
     let existingItems = [];
 
-    if (existingItemsStr) {
+    if (existingItemsStr && existingItemsStr !== 'undefined') {
       try {
         existingItems = JSON.parse(decodeURIComponent(existingItemsStr));
       } catch (e) {
@@ -91,10 +92,17 @@ export default function BuildConfig() {
       ...updatedItems
     ];
 
-    const selectedItemStr = JSON.stringify(existingItems);
-    Cookies.set('selectedItem', selectedItemStr, { expires: 7 });
-    toast.success("All products have been added to the cart!");
+    try {
+      const selectedItemStr = JSON.stringify(existingItems);
+      console.log(selectedItemStr);
+      Cookies.set('selectedItem', selectedItemStr, { expires: 7 });
+      toast.success("All products have been added to the cart!");
+    } catch (e) {
+      console.error("Error setting cookie:", e);
+      toast.error("Add to cart fail!");
+    }
   };
+
 
   const formatCurrency = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);

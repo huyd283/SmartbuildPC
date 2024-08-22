@@ -12,9 +12,15 @@ export const getListOrdersAdmin = async () => {
       return error;
     }
   };
-export const ListAccountForAdmin = async (id) => {
+export const ListAccountForAdmin = async (data) => {
     try {
-      const response = await jwtInterceptor('Account/ListAccountForAdmin');
+      const response = await jwtInterceptor('Account/ListAccountForAdmin' , {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
