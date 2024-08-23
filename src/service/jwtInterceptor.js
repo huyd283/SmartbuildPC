@@ -1,4 +1,5 @@
 
+import { Router } from 'next/router';
 import authService from './authService';
 
 const environment = {
@@ -6,7 +7,7 @@ const environment = {
   host: 'https://apismartpc.developvn.click/api/',
 };
 
-export const jwtInterceptor = (url, options = {}) => {
+export const jwtInterceptor = async(url, options = {}) => {
   let modifiedUrl = url;
   let headers = options.headers || {};
 
@@ -25,8 +26,21 @@ export const jwtInterceptor = (url, options = {}) => {
     }
   }
 
-  return fetch(modifiedUrl, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(modifiedUrl, {
+      ...options,
+      headers,
+    });
+    
+    if (response.status === 401) {
+      // Redirect to login page when unauthorized
+      window.location.href = '/login';
+      return Promise.reject('Unauthorized');
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Error in jwtInterceptor:', error);
+    throw error;
+  }
 };
