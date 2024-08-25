@@ -21,7 +21,7 @@ export default function Login() {
         toast.success(response.message);
         localStorage.setItem('currentUser', JSON.stringify(response));
         const decodedToken = jwtDecode(response?.tokenInformation?.accessToken);
-        if(decodedToken?.role == "ADMIN"){
+        if(decodedToken?.role == "ADMIN" || decodedToken?.role == "STAFF"){
           window.location.href = '/admin-add-product';
         } else {
           window.location.href = '/';

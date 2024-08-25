@@ -1,9 +1,10 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 export async function getServerSideProps(context) {
-  const { params, query, req } = context;
+  const { req } = context;
   const currentPath = req.url;
   const pathSegments = currentPath.split("/");
   const lastSegment = pathSegments[pathSegments.length - 1];
@@ -14,14 +15,29 @@ export async function getServerSideProps(context) {
     },
   };
 }
+
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [lastSegment, setActivePath] = useState("/");
-  const showHeader = pathname === "/admin-login" ? false : true;
+  const [role, setRole] = useState(null); // Thêm state để lưu role của người dùng
+  const showHeader = pathname !== "/admin-login";
+
   function onClickLogout() {
     window.location.href = "/admin-login";
     localStorage.clear();
   }
+
+  const checkRole = () => {
+    const response = JSON.parse(localStorage.getItem("currentUser"));
+    if (response) {
+      const decodedToken = jwtDecode(response.tokenInformation.accessToken);
+      setRole(decodedToken.role); // Cập nhật role vào state
+    }
+  };
+
+  useEffect(() => {
+    checkRole();
+  }, []);
 
   return (
     <div className={`${!showHeader && "hidden"} `}>
@@ -30,7 +46,6 @@ export default function AdminSidebar() {
           <div>
             <ul className="flex list-none flex-col w-full">
               <hr className="my-4 w-full" />
-              {/* Heading */}
               <span className="mr-2 block pb-4 pt-1 text-sm font-bold uppercase text-info w-full">
                 Sản phẩm
               </span>
@@ -111,32 +126,38 @@ export default function AdminSidebar() {
 
               <hr className="my-4 w-full" />
 
-              <span className="mr-2 block pb-4 pt-1 text-xs font-bold uppercase text-info w-full">
-                Account
-              </span>
-
-              <li className="flex items-center">
-                <Link href="/admin-account">
-                  <span
-                    className={`block py-3 text-xs font-bold uppercase cursor-pointer ${
-                      lastSegment === "/admin-account"
-                        ? "text-green-400"
-                        : "text-white"
-                    }`}
-                    onClick={() => setActivePath("/admin-account")}
-                  >
-                    <i
-                      className={`text-sm cursor-pointer ${
-                        lastSegment === "/admin-account"
-                          ? "text-green-400"
-                          : "text-white"
-                      }`}
-                    >
-                      Quản lý account
-                    </i>
+              {role === "ADMIN" && ( // Chỉ hiển thị menu Account nếu role là ADMIN
+                <>
+                  <span className="mr-2 block pb-4 pt-1 text-xs font-bold uppercase text-info w-full">
+                    Account
                   </span>
-                </Link>
-              </li>
+
+                  <li className="flex items-center">
+                    <Link href="/admin-account">
+                      <span
+                        className={`block py-3 text-xs font-bold uppercase cursor-pointer ${
+                          lastSegment === "/admin-account"
+                            ? "text-green-400"
+                            : "text-white"
+                        }`}
+                        onClick={() => setActivePath("/admin-account")}
+                      >
+                        <i
+                          className={`text-sm cursor-pointer ${
+                            lastSegment === "/admin-account"
+                              ? "text-green-400"
+                              : "text-white"
+                          }`}
+                        >
+                          Quản lý account
+                        </i>
+                      </span>
+                    </Link>
+                  </li>
+                  <hr className="my-4 w-full" />
+                </>
+              )}
+
               <li className="flex items-center">
                 <Link href="/admin-profile">
                   <span
@@ -153,13 +174,12 @@ export default function AdminSidebar() {
                           ? "text-green-400"
                           : "text-white"
                       }`}
-                    >Setting
+                    >
+                      Setting
                     </i>
                   </span>
                 </Link>
               </li>
-              <hr className="my-4 w-full" />
-
               <li className="flex items-center">
                 <button
                   type="button"

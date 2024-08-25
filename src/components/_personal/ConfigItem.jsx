@@ -33,6 +33,7 @@ import {
   setSelectedProduct,
   removeSelectedProduct,
   decreTotalPrice,
+  updateSelectedCategoryIds,
 } from "@/app/_utils/store/product.slice";
 import { useDispatch } from "react-redux";
 
@@ -52,13 +53,15 @@ export default function ConfigItem({
   const selectedProduct = useSelector(
     (state) => state.product.selectedProductIds
   );
+  const selectedCategoryIds = useSelector(
+    (state) => state.product.selectedCategoryIds
+  );
   const [selectedSearch, setSelectedSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantityItem, setQuantityItem] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const handleQuantityChange = (item, quantityItem) => {
     setQuantityItem(quantityItem);
     onQuantityChange(item, quantityItem);
@@ -71,6 +74,9 @@ export default function ConfigItem({
     onSelected(selectedItem, action);
     onPriceChange(selectedItem?.price, action, quantityItem);
     dispatch(setSelectedProduct(selectedItem.productId));
+    dispatch(
+      updateSelectedCategoryIds([...selectedCategoryIds, item.categoryId])
+    );
     setIsDialogOpen(false);
   };
 
@@ -84,9 +90,12 @@ export default function ConfigItem({
     onPriceChange(selectedItem?.price, action, quantityItem);
     setSelectedItem(null);
     dispatch(removeSelectedProduct(selectedItem.productId));
-    console.log(selectedItem.price);
-
     dispatch(decreTotalPrice(selectedItem?.price));
+    dispatch(
+      updateSelectedCategoryIds(
+        selectedCategoryIds.filter((i) => i !== item.categoryId)
+      )
+    );
     toast.success("Deleted successfully");
   };
 
@@ -97,6 +106,29 @@ export default function ConfigItem({
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
+  };
+
+  const handleClickSelect = (notice = true) => {
+    console.log("item", item);
+    if (item.categoryId === 7) {
+      if (
+        selectedCategoryIds.includes(1) &&
+        selectedCategoryIds.includes(2) &&
+        selectedCategoryIds.includes(3) &&
+        (selectedCategoryIds.includes(4) || selectedCategoryIds.includes(5))
+      ) {
+        console.log("ủa alooooo");
+        setIsDialogOpen(true);
+      } else {
+        if(notice)
+          toast.error(
+            "Please select CPU, MAINBOARD, RAM, SSD or HDD berfore select PSU!"
+          );
+        setIsDialogOpen(false);
+      }
+    } else {
+      setIsDialogOpen(true);
+    }
   };
 
   const onRefreshRef = useRef();
@@ -128,11 +160,20 @@ export default function ConfigItem({
           </div>
         </CollapsibleTrigger>
         <div className="w-full md:w-4/5 flex items-center justify-center md:justify-end py-4">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => {
+              if (open) {
+                handleClickSelect(false);
+              } else {
+                setIsDialogOpen(false);
+              }
+            }}
+          >
             <DialogTrigger asChild>
               <Button
                 className="bg-red-600 hover:bg-red-500 w-full md:w-auto"
-                onClick={() => setIsDialogOpen(true)}
+                onClick={handleClickSelect}
               >
                 Select
               </Button>

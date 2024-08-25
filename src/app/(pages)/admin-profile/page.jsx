@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { editUser, getDataProfile } from "@/service/Api-service/apiAccount";
+import { changePassword, editUser, getDataProfile } from "@/service/Api-service/apiAccount";
 import toast from "react-hot-toast";
 import Modal from "antd/es/modal/Modal";
 
@@ -18,23 +18,6 @@ export default function Widget() {
     confirmPassword: "",
   });
 
-  const fetchDataUser = async () => {
-    try {
-      const res = await getDataProfile();
-      setDatUser(res?.result);
-      setEditData({
-        fullName: res?.result?.fullName || "",
-        address: res?.result?.address || "",
-        phone: res?.result?.phone || "",
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDataUser();
-  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -73,11 +56,12 @@ export default function Widget() {
     console.log(passwordData);
     // Xử lý logic đổi mật khẩu ở đây
     try {
-      // Ví dụ gọi API đổi mật khẩu ở đây
-      // const res = await changePassword(passwordData);
-      // toast.success(res.message);
-      toast.success("Password changed successfully!");
-      setShowChangePasswordModal(false);
+      const res = await changePassword(passwordData);
+        if(res.statusCode === 200 || res.statusCode === 201) {
+          toast.success("Password changed successfully!");
+        } else {
+          toast.error(res.errorMessages)
+        }
     } catch (error) {
       toast.error("Đổi mật khẩu thất bại");
       console.error("Error changing password:", error);

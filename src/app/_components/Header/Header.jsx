@@ -7,7 +7,8 @@ import {
   Truck,
   Wrench,
 } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";
+import { Image } from "antd";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
@@ -94,16 +95,31 @@ export default function Header() {
   };
   return (
     <header className={`${!showHeader && "hidden"} w-full bg-[#026db5]`}>
-      <div className="flex container items-center justify-between xl:py-4"   style={{ padding: "1rem !important" }}>
+      <div
+        className="flex container items-center justify-between xl:py-4"
+        style={{
+          padding: "1rem !important",
+          width: "unset",
+          maxWidth: "unset",
+        }}
+      >
         {/* Logo */}
         <Link href={"/"}>
           {
+            // <Image
+            //   src={"/SmartPCDoAn.png"}
+            //   width={260}
+            //   height={96}
+            //   alt="logo"
+            //   className="w-[200px] h-full max-h-20 xl:w-[260px] bg-cover bg-center"
+            // />
             <Image
               src={"/SmartPCDoAn.png"}
               width={260}
               height={96}
               alt="logo"
               className="w-[200px] h-full max-h-20 xl:w-[260px] bg-cover bg-center"
+              preview={false}
             />
           }
         </Link>
@@ -114,7 +130,7 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <h2 className="hidden lg:flex gap-2 items-center border rounded-sm p-2 px-4 bg-white cursor-pointer text-sm font-semibold">
                 <LayoutGrid className="h-4 w-4 listproduct" />
-                Category
+                <div style={{ whiteSpace: "nowrap" }}>Category</div>
               </h2>
             </DropdownMenuTrigger>
           </DropdownMenu>
@@ -123,17 +139,52 @@ export default function Header() {
             style={{ display: "none", marginTop: "1px" }}
             className="homepage-slider-2019 absolute"
           >
-            <div className="homepage-slider-left">
-              <ul className="ul ul_menu_2019 boxshadowx2023" id="menu-2019">
+            <div
+              className="homepage-slider-left"
+              style={{
+                float: "left",
+                width: "205px",
+                fontSize: "12px",
+                zIndex: 555,
+                position: "relative",
+              }}
+            >
+              <ul
+                className="ul ul_menu_2019 boxshadowx2023"
+                id="menu-2019"
+                style={{
+                  background: "#fff",
+                  width: "200px",
+                  top: "43px",
+                  left: 0,
+                  zIndex: 99,
+                  transform: "translate3d(0, 0, 0)",
+                  border: "1px solid #e1e1e1",
+                  marginTop: "-1px !important",
+                }}
+              >
                 {listCate?.result?.map((item) => (
                   <li
                     key={item.categoryId}
                     id="vt-1106"
                     className="js-hover-menu li-catcha-menu"
+                    style={{
+                      paddingLeft: "5px",
+                      lineHeight: "26.215px",
+                      height: "26.215px",
+                      borderBottom: "1px solid #ddd",
+                    }}
                   >
                     <a
                       onClick={() => navigate(item.categoryId)}
                       className="root"
+                      style={{
+                        color: "#333e48",
+                        fontWeight: 600,
+                        position: "relative",
+                        height: "26.18px",
+                        cursor: "pointer",
+                      }}
                     >
                       {item.categoryName}
                     </a>
@@ -146,7 +197,7 @@ export default function Header() {
         </div>
 
         {/* search input */}
-        <div style={{ width: "40%" }} className="ml-auto hidden lg:flex ">
+        <div style={{ width: "40%" }} className="hidden lg:flex ">
           <form style={{ width: "100%" }} onSubmit={searchProduct}>
             <label
               htmlFor="default-search"
@@ -205,12 +256,12 @@ export default function Header() {
               {currentUser ? (
                 <div className="block">
                   <div className="p-2">
-                  <Link href="/profile">Profile</Link>
+                    <Link href="/profile">Profile</Link>
                   </div>
                   <div className="p-2">
-                  <Link href="#" onClick={handleLogout}>
-                    Logout
-                  </Link>
+                    <Link href="#" onClick={handleLogout}>
+                      Logout
+                    </Link>
                   </div>
                 </div>
               ) : (

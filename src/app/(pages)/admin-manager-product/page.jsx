@@ -1,6 +1,5 @@
 "use client";
 import { getDataCate, getDataStore } from "@/service/Api-service/apiCategorys";
-
 import {
   GetAllProducts,
   deleteProduct,
@@ -8,7 +7,8 @@ import {
   updateProduct,
 } from "@/service/Admin-service/admin-product";
 import { useState, useEffect } from "react";
-import Image from "next/image";
+// import Image from "next/image";
+import { Image } from "antd";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -45,6 +45,7 @@ export default function Product() {
   const [productImage, setProductImage] = useState(null);
   const [productId, setProductId] = useState(null);
   const [dataTreeselect, setDataTreeselect] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const fetchDataCate = async () => {
     try {
@@ -66,7 +67,7 @@ export default function Product() {
   };
   useEffect(() => {
     const fetchDataTag = async (categoryId) => {
-      setProductTag([]);
+      // setProductTag([]);
       try {
         const res = await getTagbyCategory(categoryId);
         const mappedData = res.result.map((item) => ({
@@ -92,26 +93,28 @@ export default function Product() {
   const handleDelete = async (productId) => {
     try {
       await deleteProduct(productId);
-      fetchData(currentPage);
+      // fetchData(currentPage);
+      fetchData(currentPage, productCategory);
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
 
   const handleEdit = (product) => {
-    console.log(product);
+    console.log("product", product);
     setProductId(product.productId);
     setProductBrand(product.brand);
     setProductCategory(product.categoryID);
     setProductDescription(product.description);
     setProductImage(product.imageLink);
+    setImagePreview(product.imageLink);
     setProductName(product.productName);
     setProductPrice(product.price);
     setProductQuantity(product.quantity);
     setProductStatus(product.status);
     setProductTPD(product.tdp);
     setProductTag(product.tag);
-    setProductWarranty(product.warranty);
+    setProductWarranty(product.warranty.replace(" Months", ""));
     setIsEditModalOpen(true);
   };
 
@@ -121,7 +124,7 @@ export default function Product() {
       formData.append("ProductName", productName);
       formData.append("Description", productDescription);
       formData.append("Price", productPrice);
-      formData.append("Warranty", productWarranty);
+      formData.append("Warranty", productWarranty ? `${productWarranty} Months` : "");
       formData.append("Brand", productBrand);
       formData.append("Tag", productTag);
       formData.append("TDP", productTPD);
@@ -132,7 +135,7 @@ export default function Product() {
       const response = await updateProduct(productId, formData);
       if (response.statusCode === 200 || response.statusCode === 201) {
         setIsEditModalOpen(false);
-        fetchData(currentPage);
+        fetchData(currentPage, productCategory);
         toast.success("Sửa sản phẩm thành công");
       } else {
         toast.error(response.title);
@@ -145,12 +148,13 @@ export default function Product() {
     const file = e.target.files[0];
     if (file && file.type === "image/jpeg") {
       setProductImage(file);
+      setImagePreview(null)
     } else {
       alert("Chỉ được phép tải lên file JPG.");
     }
   };
   useEffect(() => {
-    fetchData(currentPage);
+    fetchData(currentPage, productCategory);
     fetchDataCate();
   }, [currentPage, itemsPerPage]);
   const onChangeTag = (newValue) => {
@@ -165,6 +169,7 @@ export default function Product() {
     }
   };
   const handleCategoryChange = (categoryId) => {
+    setProductCategory(categoryId);
     fetchData(currentPage, categoryId);
   };
   return (
@@ -221,11 +226,11 @@ export default function Product() {
                       data?.imageLink ||
                       "https://maytinh.sharekhoahoc.vn/wp-content/uploads/2021/12/8530d87af9fc1bf1a3617728d8954b16_63b594ba72d04e3bb9688047fa42ab2f_master-400x400.jpg"
                     }
-                    unoptimized
                     alt={data.productName || "Product Image"}
                     width={100}
                     height={100}
                     className="bg-center bg-contain"
+                    preview={false}
                   />
                 </td>
                 <td className="px-1 py-1 text-center border">
@@ -248,8 +253,10 @@ export default function Product() {
                 <td className="px-1 py-1 text-center border">
                   {data.warranty}
                 </td>
-                <td className="px-1 py-1 text-center border">
-
+                <td
+                  className="px-1 py-1 text-center border"
+                  style={{ whiteSpace: "nowrap" }}
+                >
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     onClick={() => handleEdit(data)}
@@ -263,8 +270,7 @@ export default function Product() {
                         className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                         onClick={() => setSelectedProduct(data.productId)}
                       >
-                                          <Trash2 />                  
-
+                        <Trash2 />
                       </button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -422,9 +428,20 @@ export default function Product() {
                   htmlFor="product-warranty"
                   className="block text-primary font-semibold mb-2"
                 >
-                  Bảo hành
+                  Số tháng bảo hành (Months)
                 </label>
-                <select
+                <input
+                  type="number"
+                  id="product-warranty"
+                  className="w-full p-2 border border-border rounded"
+                  value={productWarranty}
+                  placeholder="Enter number"
+                  onChange={(e) => {
+                    setProductWarranty(e.target.value);
+                  }}
+                  required
+                />
+                {/* <select
                   id="product-warranty"
                   className="w-full p-2 border border-border rounded"
                   value={productWarranty}
@@ -438,7 +455,7 @@ export default function Product() {
                   <option value="24 Months">24 Months</option>
                   <option value="36 Months">36 Months</option>
                   <option value="48 Months">48 Months</option>
-                </select>
+                </select> */}
               </div>
               <div className="mb-4">
                 <label
@@ -479,7 +496,7 @@ export default function Product() {
                   htmlFor="product-status"
                   className="block text-primary font-semibold mb-2"
                 >
-                  Trạng thái 
+                  Trạng thái
                 </label>
                 <select
                   id="product-status"
@@ -524,6 +541,16 @@ export default function Product() {
                   onChange={handleImageChange}
                   required
                 />
+                {imagePreview && 
+                  <Image
+                    src={imagePreview}
+                    alt={"Product Image"}
+                    width={100}
+                    height={100}
+                    className="bg-center bg-contain"
+                    preview={false}
+                  />
+                }
               </div>
             </formData>
             <div className="flex justify-end gap-2 mt-4">

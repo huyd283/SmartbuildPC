@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from 'react';
 import {  LoginAdmin } from '@/service/Login/login';
-// import { toast } from 'sonner';
 import toast from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 import { ArrowBigLeft } from 'lucide-react';
@@ -24,7 +23,7 @@ export default function Login() {
         const decodedToken = jwtDecode(response?.tokenInformation?.accessToken);
         toast.success(response.message);
         localStorage.setItem('currentUser', JSON.stringify(response));
-        if(decodedToken?.role == "ADMIN"){
+        if(decodedToken?.role == "ADMIN" || decodedToken?.role == "STAFF"){
           window.location.href = '/admin-add-product';
         } else {
           window.location.href = '/';
@@ -72,7 +71,7 @@ export default function Login() {
             Login
           </button>
         </form>
-        <div className="mt-4 flex justify-content-between">
+      <div className="mt-4 flex justify-content-between" style={{justifyContent: "space-between"}}>
         <div>
         <p>Do you have account?</p>
         <a className="text-success ml-2 underline" href="/create-account">Sign Up</a>

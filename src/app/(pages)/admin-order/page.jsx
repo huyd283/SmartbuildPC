@@ -77,7 +77,7 @@ export default function Widget() {
         orderStatus: "CANCEL",
       };
       const res = await CancelOrder(data);
-      console.log(res);
+
       fetchData();
     } catch (error) {
       console.error("Error cancelling order:", error);
@@ -91,11 +91,12 @@ export default function Widget() {
         orderStatus: "APPROVED",
       };
       const res = await ApproveOrder(data); 
-      console.log(res);
+      xuatFile(orderID)
       fetchData();
     } catch (error) {
       console.error("Error approving order:", error);
     }
+    
   };
 
   const handleDone = async (orderID) => {

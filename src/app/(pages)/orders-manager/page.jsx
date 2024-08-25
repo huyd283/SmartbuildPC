@@ -59,39 +59,40 @@ export default function Widget() {
 
   function formatDateTime(datetime) {
     const date = new Date(datetime);
-  
+
     const hours = date.getHours();
     const minutes = date.getMinutes();
-  
-    const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
-  
+
+    const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")}`;
+
     const day = date.getDate();
-    const month = date.getMonth() + 1; 
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
-  
-    const formattedDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
-  
-    return `${formattedTime} - ${formattedDate}`;
+
+    const formattedDate = `${day.toString().padStart(2, "0")}/${month
+      .toString()
+      .padStart(2, "0")}/${year}`;
+
+    return `${formattedDate}`;
   }
-  const xuatFile = async(orderId) => {
-      const body = {
-        "orderId": orderId,
-        "billDate": "2024-08-18T17:02:52.368Z",
-        "taxIn": 0,
-        "address": ""
-      }
-     const response =  await createBill(body);
-     const responseexport = await exportBill(response.result)
-     await downloadTxtFile(responseexport)
-     
-  }
+  const xuatFile = async (orderId) => {
+    const body = {
+      orderId: orderId,
+      billDate: "2024-08-18T17:02:52.368Z",
+      taxIn: 0,
+      address: "",
+    };
+    const response = await createBill(body);
+    const responseexport = await exportBill(response.result);
+    await downloadTxtFile(responseexport);
+  };
   const handleCancel = async (orderID) => {
     try {
-      const data = {
-        orderID: orderID,
-        orderStatus: "CANCEL",
-      };
-      const res = await CancelOrder(data);
+      // const data = {
+      //   orderID: orderID,
+      //   orderStatus: "CANCEL",
+      // };
+      const res = await CancelOrder(orderID);
       console.log(res);
       fetchData();
     } catch (error) {
@@ -171,9 +172,8 @@ export default function Widget() {
                 >
                   Detail
                 </button>
-                
               </CollapsibleTrigger>
-              <CollapsibleTrigger asChild>
+              {/* <CollapsibleTrigger asChild>
                 <button
                   className="bg-blue-500 text-primary-foreground p-2 rounded text-center"
                   onClick={() => xuatFile(order.orderID)}
@@ -181,7 +181,7 @@ export default function Widget() {
                   Xuất file
                 </button>
                 
-              </CollapsibleTrigger>
+              </CollapsibleTrigger> */}
             </div>
             <CollapsibleContent asChild>
               <div>

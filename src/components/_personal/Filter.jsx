@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { FilterProducts } from "@/service/Api-service/apiProducts";
 

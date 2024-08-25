@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
+import { Image } from "antd";
 import { Input } from "../ui/input";
 
 export default function ProductSelectedItem({ item, onRemove, onQuantityChange }) {
@@ -28,15 +29,15 @@ export default function ProductSelectedItem({ item, onRemove, onQuantityChange }
     <div className="w-full flex items-center justify-between float-left border p-4 rounded-sm">
       <Link href={item?.href || ""} className="w-20 h-20 overflow-hidden rounded-md">
         <Image
-          src={
+            src={
             item?.imageLink ||
             "https://maytinh.sharekhoahoc.vn/wp-content/uploads/2021/12/8530d87af9fc1bf1a3617728d8954b16_63b594ba72d04e3bb9688047fa42ab2f_master-400x400.jpg"
           }
-          unoptimized
           alt={item?.name || "Vỏ Máy Tính XIGMATEK XM-10 (EN44252) M-ATX"}
           width={100}
           height={100}
           className="w-full h-full bg-center bg-contain"
+          preview={false}
         />
       </Link>
       <div className="w-full flex flex-col flex-1 py-2 px-3 text-sm gap-y-2">

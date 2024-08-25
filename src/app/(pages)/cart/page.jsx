@@ -23,8 +23,8 @@ export default function Cart() {
   const [currentItem, setCurrentItem] = useState(null);
   const [selectAll, setSelectAll] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [name, setName] = useState('');
-  const [date, setDate] = useState(null)
+  const [name, setName] = useState("");
+  const [date, setDate] = useState(null);
   useEffect(() => {
     const selectedItemStr = Cookies.get("selectedItem");
     if (selectedItemStr) {
@@ -32,7 +32,9 @@ export default function Cart() {
         const selectedItemArray = JSON.parse(
           decodeURIComponent(selectedItemStr)
         );
-        setSelectedItems(selectedItemArray);
+        setSelectedItems(
+          selectedItemArray.map((i) => ({ ...i, quantity: i.quantityBuy }))
+        );
       } catch (e) {
         console.error("Error parsing JSON from cookie:", e);
       }
@@ -45,7 +47,7 @@ export default function Cart() {
       setCurrentUser(parsedUser);
       setName(decodedToken.unique_name);
     }
-    setDate(new Date().toISOString())
+    setDate(new Date().toISOString());
   }, []);
 
   const updateCookie = (items) => {
@@ -57,6 +59,10 @@ export default function Cart() {
   const handleIncrement = (productId) => {
     const updatedItems = selectedItems.map((item) => {
       if (item.productId === productId) {
+        if (item.quantity >= item.quantityOfProduct) {
+          toast.error(`Quantity of Product is ${item.quantityOfProduct}!`);
+          return item;
+        }
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
@@ -80,12 +86,15 @@ export default function Cart() {
     setSelectedItems(updatedItems);
     updateCookie(updatedItems);
   };
-
   const handleQuantityChange = (e, productId) => {
     const value = parseInt(e.target.value, 10);
     if (!isNaN(value) && value > 0) {
       const updatedItems = selectedItems.map((item) => {
         if (item.productId === productId) {
+          if (value > item.quantityOfProduct) {
+            toast.error(`Quantity of Product is ${item.quantityOfProduct}!`);
+            return item;
+          }
           return { ...item, quantity: value };
         }
         return item;
@@ -145,13 +154,15 @@ export default function Cart() {
               productId: product.productId,
               quantity: product.quantity,
             })),
-          }
+          };
           const res = createOrders(data);
-          const updatedItems = selectedItems.filter((item) => !selectedProducts.some((p) => p.productId === item.productId));
+          const updatedItems = selectedItems.filter(
+            (item) =>
+              !selectedProducts.some((p) => p.productId === item.productId)
+          );
           setSelectedItems(updatedItems);
           updateCookie(updatedItems);
           window.location.href = "/orders-manager";
-
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -176,7 +187,10 @@ export default function Cart() {
             <p>Your cart is empty.</p>
           ) : (
             selectedItems.map((item) => (
-              <div key={item.productId} className="flex flex-col md:flex-row items-center mb-4">
+              <div
+                key={item.productId}
+                className="flex flex-col md:flex-row items-center mb-4"
+              >
                 <input
                   type="checkbox"
                   className="mr-2"
@@ -199,7 +213,7 @@ export default function Cart() {
                 </div>
                 <div className="text-right md:text-left">
                   <div className="text-lg font-bold text-red-500">
-                    {item.price.toLocaleString()}₫
+                    {item.price?.toLocaleString() || 0}₫
                   </div>
                 </div>
                 <div className="flex items-center mt-2 md:mt-0 md:ml-4">
@@ -225,7 +239,16 @@ export default function Cart() {
                 <div className="text-lg font-bold text-red-500 mt-2 md:mt-0 md:ml-4">
                   {(item.price * item.quantity).toLocaleString()}₫
                 </div>
-  
+                <span
+                  className="text-white bg-[red] font-semibold p-1 rounded-sm ml-5"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setCurrentItem(item);
+                    setIsDialogOpen(true);
+                  }}
+                >
+                  Delete
+                </span>
                 <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <AlertDialogTrigger asChild>
                     <div className="hidden" />
@@ -297,5 +320,4 @@ export default function Cart() {
       </div>
     </div>
   );
-  
 }

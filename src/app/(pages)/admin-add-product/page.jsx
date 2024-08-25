@@ -19,7 +19,7 @@ export default function AddProduct() {
   const [productBrand, setProductBrand] = useState("");
   const [productTag, setProductTag] = useState([]);
   const [productTPD, setProductTPD] = useState("");
-  const [productStatus, setProductStatus] = useState("");
+  const [productStatus, setProductStatus] = useState(1);
   const [productCategory, setProductCategory] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
   const [productImage, setProductImage] = useState(null);
@@ -85,7 +85,10 @@ export default function AddProduct() {
     formData.append("ProductName", productName);
     formData.append("Description", productDescription);
     formData.append("Price", productPrice);
-    formData.append("Warranty", productWarranty);
+    formData.append(
+      "Warranty",
+      productWarranty ? `${productWarranty} Months` : ""
+    );
     formData.append("Brand", productBrand);
     formData.append("Tag", productTag);
     formData.append("TDP", productTPD);
@@ -96,17 +99,21 @@ export default function AddProduct() {
 
     try {
       let response = await createProduct(formData);
-      if(response.statusCode === 200 || response.statusCode === 201) {
+      if (response.statusCode === 200 || response.statusCode === 201) {
         toast.success("Thêm sản phẩm thành công");
-      }
-      else {
+      } else {
         console.log(response);
-        
-        toast.error(response.errorMessages)
+        // toast.error("Thêm sản phẩm thất bại!");
+        toast.error(
+          <ul>
+            {response.errorMessages?.length
+              ? response.errorMessages.map((i, idx) => <li key={idx}>{i}</li>)
+              : response.errorMessages}
+          </ul>
+        );
       }
     } catch (error) {
-      toast.error("Thêm sản phẩm thất bại")
-
+      toast.error("Thêm sản phẩm thất bại!");
       console.error("Error creating product:", error);
     }
   };
@@ -245,23 +252,19 @@ export default function AddProduct() {
             htmlFor="product-warranty"
             className="block text-primary font-semibold mb-2"
           >
-            Bảo hành
+            Số tháng bảo hành (Months)
           </label>
-          <select
+          <input
+            type="number"
             id="product-warranty"
             className="w-full p-2 border border-border rounded"
             value={productWarranty}
-            onChange={(e) => setProductWarranty(e.target.value)}
+            placeholder="Enter number"
+            onChange={(e) => {
+              setProductWarranty(e.target.value);
+            }}
             required
-          >
-            <option value="" hidden>
-              Chọn thời gian
-            </option>
-            <option value="12 Months">12 Months</option>
-            <option value="24 Months">24 Months</option>
-            <option value="36 Months">36 Months</option>
-            <option value="48 Months">48 Months</option>
-          </select>
+          />
         </div>
         <div className="mb-4">
           <label
@@ -311,8 +314,8 @@ export default function AddProduct() {
             onChange={(e) => setProductStatus(e.target.value)}
             required
           >
-            <option value="0">Ngừng kinh doanh</option>
-            <option value="1">Đang kinh doanh</option>
+            <option value={0}>Ngừng kinh doanh</option>
+            <option value={1}>Đang kinh doanh</option>
           </select>
         </div>
         <div className="mb-4">

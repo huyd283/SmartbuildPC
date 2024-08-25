@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
-
+import { CiLock, CiUnlock } from "react-icons/ci";
 import {
   changeStatus,
   ListAccountForAdmin,
@@ -34,7 +33,7 @@ export default function Account() {
     const data = {
       index: page,
       accountType: accountType,
-      status: status,
+      status: status == -1 ? null : status,
     };
     try {
       const res = await ListAccountForAdmin(data);
@@ -47,7 +46,7 @@ export default function Account() {
 
   useEffect(() => {
     fetchData(currentPage);
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, accountType, status]);
 
   const changeUnbanStatus = async (id) => {
     const body = {
@@ -102,16 +101,20 @@ export default function Account() {
           toast.success(res.message);
           closePopup();
         } else {
-          toast.error(res.errorMessages);
+          toast.error(
+            <ul>
+              {res.errorMessages?.length
+                ? res.errorMessages.map((i, idx) => <li key={idx}>{i}</li>)
+                : res.errorMessages}
+            </ul>
+          );
         }
       } catch (error) {
         toast.error("Thêm mới thất bại");
+        e;
         console.error("Error submitting edit:", error);
       }
     }
-  };
-  const handleCategoryChange = (data) => {
-    fetchData(currentPage, categoryId);
   };
   return (
     <div
@@ -121,57 +124,57 @@ export default function Account() {
       <h2 className="text-xl font-semibold mb-4">List Account</h2>
 
       <div className="flex justify-between">
-      <button
-        onClick={handleAddNew}
-        className="bg-green-500 text-white hover:bg-green-500/80 px-4 py-2 rounded-md mb-4"
-      >
-        Thêm mới
-      </button>
-      <div  className="flex justify-between">
-            <div className="flex items-center">
-              <label
-                htmlFor="category-filter"
-                className="mr-2 text-primary font-semibold"
-              >
-                Lọc theo Account Type :
-              </label>
-              <select
-                id="category-filter"
-                className="p-2 border border-border rounded"
-                value={accountType}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-              >
-                <option value="">Tất cả</option>
-                <option value="STAFF">STAFF</option>
-                <option value="ADMIN">ADMIN</option>
-              </select>
-            </div>
-            <div className="flex items-center ml-16">
-              <label
-                htmlFor="category-filter"
-                className="mr-2 text-primary font-semibold"
-              >
-                Lọc theo Status:
-              </label>
-              <select
-                id="category-filter"
-                className="p-2 border border-border rounded"
-                value={status}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-              >
-                <option value={null}>Tất cả</option>
-                <option value={0}>NOT WORKING</option>
-                <option value={1}>ACTIVE</option>
-              </select>
-            </div>
-            </div>
+        <button
+          onClick={handleAddNew}
+          className="bg-green-500 text-white hover:bg-green-500/80 px-4 py-2 rounded-md mb-4"
+        >
+          Thêm mới
+        </button>
+        <div className="flex justify-between">
+          <div className="flex items-center">
+            <label
+              htmlFor="category-filter"
+              className="mr-2 text-primary font-semibold"
+            >
+              Lọc theo Account Type :
+            </label>
+            <select
+              id="category-filter"
+              className="p-2 border border-border rounded"
+              value={accountType}
+              onChange={(e) => setAccountType(e.target.value)}
+            >
+              <option value="">Tất cả</option>
+              <option value="STAFF">STAFF</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+          <div className="flex items-center ml-16">
+            <label
+              htmlFor="category-filter"
+              className="mr-2 text-primary font-semibold"
+            >
+              Lọc theo Status:
+            </label>
+            <select
+              id="category-filter"
+              className="p-2 border border-border rounded"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value={-1}>Tất cả</option>
+              <option value={0}>NOT WORKING</option>
+              <option value={1}>ACTIVE</option>
+            </select>
+          </div>
+        </div>
       </div>
       {/* Popup thêm mới */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md w-1/2">
             <h3 className="text-lg font-semibold mb-4">Thêm tài khoản mới</h3>
-      
+
             <div className="mb-4">
               <label className="block text-sm font-medium">UserName</label>
               <input
@@ -271,7 +274,7 @@ export default function Account() {
           </thead>
           <tbody>
             {listData
-              ?.filter((x) => x.accountType != "ADMIN")
+              // ?.filter((x) => x.accountType != "ADMIN")
               .map((data, index) => (
                 <tr key={index}>
                   <td className="px-1 py-1 text-center border">
@@ -292,17 +295,27 @@ export default function Account() {
                       <a
                         onClick={() => changeBanStatus(data.accountID)}
                         className="text-center"
-                        style={{ cursor: "pointer" }}
+                        style={{
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                        title="Ban"
                       >
-                        Ban
+                        <CiLock size={22} color={"red"} />
                       </a>
                     ) : (
                       <a
                         onClick={() => changeUnbanStatus(data.accountID)}
                         className="text-center"
-                        style={{ cursor: "pointer" }}
+                        style={{
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                        title="UnBan"
                       >
-                        Unban
+                        <CiUnlock size={22} color={"green"} />
                       </a>
                     )}
                   </td>
