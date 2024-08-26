@@ -45,6 +45,33 @@ export default function AdminSidebar() {
         <div className="mx-auto flex w-full flex-wrap items-center justify-between px-0">
           <div>
             <ul className="flex list-none flex-col w-full">
+            <hr className="my-4 w-full" />
+              <span className="mr-2 block pb-4 pt-1 text-sm font-bold uppercase text-info w-full">
+                 Trang chủ
+              </span>
+
+              <li className="flex items-center">
+                <Link href="/admin-dashboard">
+                  <span
+                    className={`block py-3 text-xs font-bold uppercase cursor-pointer ${
+                      lastSegment === "/admin-dashboard"
+                        ? "text-green-400"
+                        : "text-white"
+                    }`}
+                    onClick={() => setActivePath("/admin-dashboard")}
+                  >
+                    <i
+                      className={`text-sm cursor-pointer ${
+                        lastSegment === "/admin-dashboard"
+                          ? "text-green-400"
+                          : "text-white"
+                      }`}
+                    >
+                      Dashboard
+                    </i>
+                  </span>
+                </Link>
+              </li>
               <hr className="my-4 w-full" />
               <span className="mr-2 block pb-4 pt-1 text-sm font-bold uppercase text-info w-full">
                 Sản phẩm

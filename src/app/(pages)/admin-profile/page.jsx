@@ -13,9 +13,9 @@ export default function Widget() {
   });
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    oldPass: "",
+    newPass: "",
+    resetPass: "",
   });
 
 
@@ -79,45 +79,45 @@ export default function Widget() {
               <div className="mb-4">
                 <label
                   className="block text-sm font-medium text-muted-foreground"
-                  htmlFor="oldPassword"
+                  htmlFor="oldPass"
                 >
                   Mật khẩu cũ
                 </label>
                 <input
                   className="mt-1 block w-full border border-border rounded-md p-2"
                   type="password"
-                  id="oldPassword"
-                  value={passwordData.oldPassword}
+                  id="oldPass"
+                  value={passwordData.oldPass}
                   onChange={handlePasswordChange}
                 />
               </div>
               <div className="mb-4">
                 <label
                   className="block text-sm font-medium text-muted-foreground"
-                  htmlFor="newPassword"
+                  htmlFor="newPass"
                 >
                   Mật khẩu mới
                 </label>
                 <input
                   className="mt-1 block w-full border border-border rounded-md p-2"
                   type="password"
-                  id="newPassword"
-                  value={passwordData.newPassword}
+                  id="newPass"
+                  value={passwordData.newPass}
                   onChange={handlePasswordChange}
                 />
               </div>
               <div className="mb-4">
                 <label
                   className="block text-sm font-medium text-muted-foreground"
-                  htmlFor="confirmPassword"
+                  htmlFor="resetPass"
                 >
                   Nhập lại mật khẩu mới
                 </label>
                 <input
                   className="mt-1 block w-full border border-border rounded-md p-2"
                   type="password"
-                  id="confirmPassword"
-                  value={passwordData.confirmPassword}
+                  id="resetPass"
+                  value={passwordData.resetPass}
                   onChange={handlePasswordChange}
                 />
               </div>

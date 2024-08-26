@@ -143,7 +143,7 @@ export default function ProductDetal() {
               Order Now
             </button>
             <div className="mt-4">
-              <div className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold mb-2">
+              <div className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold mb-2 text-center">
                 REST ASSURED TO BUY
               </div>
               <ul className="list-disc pl-5">
@@ -176,7 +176,7 @@ export default function ProductDetal() {
               </ul>
             </div>
             <div className="mt-4">
-              <div className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold mb-2">
+              <div className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold mb-2 text-center">
                 FREE SHIP
               </div>
               <ul className="list-disc pl-5">

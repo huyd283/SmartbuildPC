@@ -21,14 +21,19 @@ import {
   updateTotalPrice,
   resetTotalPrice,
 } from "@/app/_utils/store/product.slice";
+import { SendData } from "@/service/Api-service/apiChatbox";
 
 export default function BuildConfig() {
   const [configList, setConfigList] = useState([]);
   const [refreshFlag, setRefreshFlag] = useState(false);
   const [selectedItem, setSelectedItem] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [showGamingInput, setShowGamingInput] = useState(false);
+  const [showVideoEditorInput, setShowVideoEditorInput] = useState(false);
   const totalPrice = useSelector((state) => state.product.totalPrice);
   const dispatch = useDispatch();
-
+  const [data, setData] = useState("");
   const handleProductSelected = (item, action) => {
     if (action === "add") {
       setSelectedItem((prevTotal) => [
@@ -116,7 +121,41 @@ export default function BuildConfig() {
       toast.error("Add to cart fail!");
     }
   };
+  const callChatGPT = async () => {
+    setShowVideoEditorInput(false);
+    setShowGamingInput(false);
+    const mappedItems = selectedItem.map((item) => ({
+      name: item.productName,
+      description: item.description,
+      categoryName: item.categoryName,
+    }));
 
+    const data = {
+      purpose: purpose,
+      test: inputValue,
+      products: mappedItems,
+    };
+    try {
+      const res = await SendData(data);
+      const content = res?.result;
+      setData(typeof content === "string" ? content : JSON.stringify(content));
+      if (res.statusCode === 200 || res.statusCode === 201) {
+        toast.success(res.message);
+        // setData(res)
+      } else {
+        toast.error(
+          <ul>
+            {res.errorMessages?.length
+              ? res.errorMessages.map((i, idx) => <li key={idx}>{i}</li>)
+              : res.errorMessages}
+          </ul>
+        );
+      }
+    } catch (error) {
+      toast.error("Thất bại");
+      // console.error("Error submitting edit:", error);
+    }
+  };
   const formatCurrency = (price) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -147,6 +186,25 @@ export default function BuildConfig() {
       )
     );
   }, [selectedItem]);
+  const handleGamingInputClick = () => {
+    setShowGamingInput(true);
+    setPurpose("Gaming");
+    setInputValue("");
+    setShowVideoEditorInput(false);
+  };
+
+  const handleVideoEditorInputClick = () => {
+    setShowVideoEditorInput(true);
+    setPurpose("VideoEditor");
+    setInputValue("");
+    setShowGamingInput(false);
+  };
+  const renderHTML = (rawHTML) =>
+    rawHTML
+      .replace(/\n/g, "<br/>")
+      .replace(/\|/g, "&#124;")
+      .replace(/\*\*/g, "<strong>")
+      .replace(/(https:\/\/\S+)/g, '<a href="$1" target="_blank">$1</a>');
 
   return (
     <div className="container flex flex-col p-5 lg:py-10 gap-y-4">
@@ -225,6 +283,58 @@ export default function BuildConfig() {
             </span>
           </div>
         </div>
+       
+        <div className="flex justify-between">
+          <div className="">
+            <button
+              onClick={handleGamingInputClick}
+              className="bg-red-500 hover:bg-red-700 text-white p-3 uppercase rounded"
+            >
+              GAMING
+            </button>
+            {showGamingInput && (
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Enter gaming input"
+                className="ml-2 p-2 border rounded"
+              />
+            )}
+          </div>
+          <div>
+            {showVideoEditorInput && (
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Enter video editor input"
+                className="ml-2 p-2 border rounded"
+              />
+            )}
+            <button
+              onClick={handleVideoEditorInputClick}
+              className="bg-red-500 hover:bg-red-700 text-white p-3 uppercase rounded"
+            >
+              graphic design
+            </button>
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <button
+            onClick={callChatGPT}
+            className="bg-green-500 text-white p-3 rounded"
+          >
+            PREVIEW PERFORMANCE TEST
+          </button>
+        </div>
+        {data && data !== 'null' && (
+              <div
+              className="p-4 bg-gray-100 border border-gray-300 rounded"
+              dangerouslySetInnerHTML={{ __html: renderHTML(data) }}
+            />
+            )}
+        
       </div>
     </div>
   );

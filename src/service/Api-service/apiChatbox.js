@@ -4,7 +4,7 @@ import { jwtInterceptor } from "../jwtInterceptor";
 
 export const SendData = async (data) => {
   try {
-    const response = await jwtInterceptor('/Chatbox/Send', {
+    const response = await jwtInterceptor('/BuildPC/check', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
