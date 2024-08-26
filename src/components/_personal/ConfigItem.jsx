@@ -109,6 +109,7 @@ export default function ConfigItem({
   };
 
   const handleClickSelect = (notice = true) => {
+    console.log("item", item);
     if (item.categoryId === 7) {
       if (
         selectedCategoryIds.includes(1) &&

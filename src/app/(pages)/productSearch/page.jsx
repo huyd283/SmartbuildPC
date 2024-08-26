@@ -32,7 +32,7 @@ export default function ProductSearch() {
   const [startprice, setStartPrice] = useState("");
   const [endprice, setEndPrice] = useState("");
   const [listSearchProduct, setListSearchProduct] = useState([]);
-  const [listBrand, setListBrand] = useState([]);
+  const [listBrand, setListBrand] = useState(null);
   const [listCate, setListCate] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
@@ -81,10 +81,10 @@ export default function ProductSearch() {
       const searchQuery = urlParams.get("searchCate");
 
       setCateID(searchQuery);
-      const searchPro = await getDataProduct(searchQuery);
+      const searchPro = await getDataProduct(searchQuery || 0);
       setListSearchProduct(searchPro?.result);
-      const searchBrand = await getBrandbyCate(searchQuery);
-      setListBrand(searchBrand?.result);
+      // const searchBrand = await getBrandbyCate(searchQuery || 0);
+      // setListBrand(searchBrand?.result);
     };
     fetchData();
   }, [cateID]);

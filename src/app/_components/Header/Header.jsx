@@ -94,7 +94,7 @@ export default function Header() {
     window.location.href = "/";
   };
   return (
-    <header className={`${!showHeader && "hidden"} w-full bg-[#026db5] fixed top-0 z-50`}>
+    <header className={`${!showHeader && "hidden"} w-full bg-[#026db5]`}>
       <div
         className="flex container items-center justify-between xl:py-4"
         style={{
@@ -116,6 +116,7 @@ export default function Header() {
             <Image
               src={"/SmartPCDoAn.png"}
               width={260}
+              height={96}
               alt="logo"
               className="w-[200px] h-full max-h-20 xl:w-[260px] bg-cover bg-center"
               preview={false}
