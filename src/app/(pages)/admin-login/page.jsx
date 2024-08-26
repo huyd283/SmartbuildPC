@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import {  LoginAdmin } from '@/service/Login/login';
-import AdminLayout from '@/app/_components/AdminLayout/AdminLayout';
+import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -10,14 +11,28 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      if(username == '' || password == ''){
+        toast.error("Do not leave your account or password blank")
+        return
+      }
       const data = {email: username, password: password}
-      const user = await LoginAdmin(data);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      alert('Đăng nhập thành công');
-      window.location.href = '/';
+      const response = await LoginAdmin(data);
+      if(response.statusCode === 200 || response.statusCode === 201) {
+        toast.success(response.message);
+        localStorage.setItem('currentUser', JSON.stringify(response));
+        const decodedToken = jwtDecode(response?.tokenInformation?.accessToken);
+        if(decodedToken?.role == "ADMIN" || decodedToken?.role == "STAFF"){
+          window.location.href = '/admin-add-product';
+        } else {
+          window.location.href = '/';
+         }
+      }
+      else {
+        toast.error(response.errorMessages)
+      }
     } catch (error) {
-      console.error('Lỗi khi đăng nhập:', error);
-      alert('Đăng nhập thất bại');
+      console.log(error);
+      toast.error('Login Fail');
     }
   };
   return (

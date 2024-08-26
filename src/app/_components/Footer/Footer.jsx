@@ -6,14 +6,19 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
   const pathname = usePathname();
   const showHeader =
-    pathname === "/sign-in" || pathname === "/create-account" ? false : true;
+    pathname === "/sign-in" || pathname === "/create-account" || pathname === "/login"   ? false : true;
   return (
-    <footer className={`${!showHeader && "hidden"} bg-[#e4e8ec] flex flex-col`}>
+    <footer
+      className={`${
+        !showHeader && "hidden"
+      } bg-[#e4e8ec] flex flex-col w-full`}
+    >
       <div className="container relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 pt-8 mb-10 gap-y-4">
         <div className="flex flex-col gap-y-4 lg:gap-y-8 px-4 text-left text-sm">
           <h3 className="text-base font-semibold uppercase">GIỚI THIỆU</h3>
           <p>
-            Chuyên mua bán các loại linh kiện PC – chính hãng tại Hà Nội. Cung cấp hỗ trợ các loại giấy tờ CO, CQ, chứng thư bán hàng.
+            Chuyên mua bán các loại linh kiện PC – chính hãng tại Hà Nội. Cung
+            cấp hỗ trợ các loại giấy tờ CO, CQ, chứng thư bán hàng.
           </p>
           <p>Hỗ trợ chương trình bán hàng </p>
           <p>Hỗ trợ giá tốt nhất tại thời điểm giao dịch</p>
@@ -33,17 +38,27 @@ export default function Footer() {
               <strong>Hotline:</strong> 0123.456.789
             </span>
           </Link>
-          <Link href={"https://maps.app.goo.gl/yGwCj46oZEW5zNWn7"} className="hover:text-red-500">
+          <Link
+            href={"https://maps.app.goo.gl/yGwCj46oZEW5zNWn7"}
+            className="hover:text-red-500"
+          >
             <span>
-              <strong>Address:</strong> Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội
+              <strong>Address:</strong> Khu Giáo dục và Đào tạo – Khu Công nghệ
+              cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội
             </span>
           </Link>
-          <Link href={"https://www.facebook.com/"} className="hover:text-red-500">
+          <Link
+            href={"https://www.facebook.com/"}
+            className="hover:text-red-500"
+          >
             <span>
               <strong>Facebook:</strong> fb.com
             </span>
           </Link>
-          <Link href={"https://maps.app.goo.gl/yGwCj46oZEW5zNWn7"} className="hover:text-red-500">
+          <Link
+            href={"https://maps.app.goo.gl/yGwCj46oZEW5zNWn7"}
+            className="hover:text-red-500"
+          >
             <span>
               <strong>Gmail:</strong> daihocfpt@fpt.edu.vn
             </span>

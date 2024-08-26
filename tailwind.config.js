@@ -9,13 +9,25 @@ module.exports = {
   ],
   prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
+  container: {
+  center: true,
+  padding: {
+    DEFAULT: "1rem", // Padding cho kích thước màn hình nhỏ hơn
+    sm: "1.5rem",   // Padding cho màn hình nhỏ (sm)
+    md: "2rem",     // Padding cho màn hình trung bình (md)
+    lg: "2.5rem",   // Padding cho màn hình lớn (lg)
+    xl: "3rem",     // Padding cho màn hình rất lớn (xl)
+    "2xl": "4rem",  // Padding cho màn hình cực lớn (2xl)
+  },
+  screens: {
+    sm: "640px",    // Kích thước nhỏ
+    md: "768px",    // Kích thước trung bình
+    lg: "1024px",   // Kích thước lớn
+    xl: "1280px",   // Kích thước rất lớn
+    "2xl": "1400px", // Kích thước cực lớn
+  },
+},
+
     extend: {
       colors: {
         border: "hsl(var(--border))",

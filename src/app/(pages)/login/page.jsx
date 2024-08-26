@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from 'react';
 import {  LoginAdmin } from '@/service/Login/login';
-// import { toast } from 'sonner';
 import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
+import { ArrowBigLeft } from 'lucide-react';
+
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -17,9 +19,15 @@ export default function Login() {
       const data = {email: username, password: password}
       const response = await LoginAdmin(data);
       if(response.statusCode === 200 || response.statusCode === 201) {
+        
+        const decodedToken = jwtDecode(response?.tokenInformation?.accessToken);
         toast.success(response.message);
         localStorage.setItem('currentUser', JSON.stringify(response));
-        window.location.href = '/';
+        if(decodedToken?.role == "ADMIN" || decodedToken?.role == "STAFF"){
+          window.location.href = '/admin-dashboard';
+        } else {
+          window.location.href = '/';
+         }
       }
       else {
         toast.error(response.errorMessages)
@@ -63,9 +71,15 @@ export default function Login() {
             Login
           </button>
         </form>
-        <div className="mt-4 flex">
+      <div className="mt-4 flex justify-content-between" style={{justifyContent: "space-between"}}>
+        <div>
         <p>Do you have account?</p>
         <a className="text-success ml-2 underline" href="/create-account">Sign Up</a>
+        </div>
+        <a href="/" className='p-3 bg-blue-500 rounded-xl'><ArrowBigLeft className="text-2xl" /></a>
+        </div>
+        <div className='text-center mt-4 '>
+          <a href="/forgot" className='text-blue-500'>Forgot Password</a>
         </div>
       </div>
     </div>
