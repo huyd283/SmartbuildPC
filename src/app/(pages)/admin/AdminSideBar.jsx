@@ -23,7 +23,7 @@ export default function AdminSidebar() {
   const showHeader = pathname !== "/admin-login";
 
   function onClickLogout() {
-    window.location.href = "/admin-login";
+    window.location.href = "/login";
     localStorage.clear();
   }
 
