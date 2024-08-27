@@ -6,6 +6,7 @@ import {
   SendBill,
 } from "@/service/Api-service/apiOrders";
 import { useEffect, useState } from "react";
+import { Image } from "antd";
 import {
   Collapsible,
   CollapsibleContent,
@@ -158,7 +159,7 @@ export default function Widget() {
                   Order ID: {order.orderID}
                 </h3>
                 <h3 className="text-lg font-medium">
-                  Created At: {order.orderDate}
+                  Created At: {order.orderDate?.replace("T00:00:00", "")}
                 </h3>
                 <h3 className="text-lg font-medium">
                   Created By: {order.orderAddress}
@@ -205,7 +206,8 @@ export default function Widget() {
                     className="flex items-center justify-between py-4"
                   >
                     <div className="flex items-center">
-                      <img
+                      <Image
+                        preview={false}
                         src={item.imageLink}
                         alt={item.productName}
                         className="mr-4"

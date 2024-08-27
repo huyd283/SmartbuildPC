@@ -31,14 +31,14 @@ export default function AdminSidebar() {
     const response = JSON.parse(localStorage.getItem("currentUser"));
     if (response) {
       const decodedToken = jwtDecode(response.tokenInformation.accessToken);
-      const userRole = decodedToken?.role;  
-      setRole(userRole);  
-      if (userRole === "CUSTOMER") { 
-        window.location.href = "/";  
+      const userRole = decodedToken?.role;
+      setRole(userRole);
+      if (userRole === "CUSTOMER") {
+        window.location.href = "/";
       }
     }
   };
-  
+
   useEffect(() => {
     checkRole();
   }, []);
@@ -51,7 +51,7 @@ export default function AdminSidebar() {
             <ul className="flex list-none flex-col w-full">
               <hr className="my-4 w-full" />
               <span className="mr-2 block pb-4 pt-1 text-sm font-bold uppercase text-info w-full">
-                Trang chủ
+                Home Page
               </span>
 
               <li className="flex items-center">
@@ -78,7 +78,7 @@ export default function AdminSidebar() {
               </li>
               <hr className="my-4 w-full" />
               <span className="mr-2 block pb-4 pt-1 text-sm font-bold uppercase text-info w-full">
-                Sản phẩm
+                PRODUCTS
               </span>
 
               <li className="flex items-center">
@@ -98,7 +98,7 @@ export default function AdminSidebar() {
                           : "text-white"
                       }`}
                     >
-                      Thêm sản phẩm mới
+                      New Product
                     </i>
                   </span>
                 </Link>
@@ -121,7 +121,7 @@ export default function AdminSidebar() {
                           : "text-white"
                       }`}
                     >
-                      Quản lý sản phẩm
+                      Product Management
                     </i>
                   </span>
                 </Link>
@@ -149,7 +149,7 @@ export default function AdminSidebar() {
                           : "text-white"
                       }`}
                     >
-                      Quản lý order
+                      Order Management
                     </i>
                   </span>
                 </Link>
@@ -180,7 +180,7 @@ export default function AdminSidebar() {
                               : "text-white"
                           }`}
                         >
-                          Quản lý account
+                          Account Management
                         </i>
                       </span>
                     </Link>
@@ -232,7 +232,7 @@ export default function AdminSidebar() {
                           : "text-white"
                       }`}
                     >
-                      Đăng xuất
+                      Log Out
                     </i>
                   </span>
                 </button>

@@ -118,7 +118,7 @@ export default function ProductDetal() {
                   >
                     {productdetail?.status === 0 ||
                     productdetail?.quantity === 0
-                      ? "Out of Stock"
+                      ? "Deactivated"
                       : "Available"}
                   </b>
                 </li>

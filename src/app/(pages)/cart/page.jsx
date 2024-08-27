@@ -75,7 +75,7 @@ export default function Cart() {
 
   const updateCookie = (items) => {
     console.log(JSON.stringify(items));
-    
+
     Cookies.set("selectedItem", encodeURIComponent(JSON.stringify(items)), {
       expires: 7,
     });
@@ -175,11 +175,11 @@ export default function Cart() {
       orderId: orderId,
       billDate: date,
       taxIn: 0,
-      address: address,
+      address: name,
     };
     const response = await createBill(body);
     const responseexport = await exportBill(response.result);
-    await downloadTxtFile(responseexport);
+    // await downloadTxtFile(responseexport);
   };
 
   const confirmOrder = async (paymentType) => {
@@ -191,7 +191,7 @@ export default function Cart() {
         const data = {
           orderDate: date,
           orderStatus: 0,
-          orderAddress: address,
+          orderAddress: name,
           items: selectedProducts.map((product) => ({
             productId: product.productId,
             quantity: product.quantity,
@@ -210,11 +210,11 @@ export default function Cart() {
             0
           );
           const resQR = await generateQrCode(resOrder.result);
-          console.log("resQR: ", resQR);
           setQrUrl(resQR.result.replace("5000", total));
           setIsOpenQRCode(true);
           let intervalId = setInterval(async () => {
             const res = await checkPaymentOrGenerateQrCode(resOrder.result);
+            console.log("res: ", res);
             if (res.result === "Payment pending or needs processing.") return;
             clearInterval(intervalId);
             toast.success(res.result);
@@ -224,6 +224,8 @@ export default function Cart() {
             };
             const resStatus = await ApproveOrder(data);
             xuatFile(resOrder.result);
+            setIsOpenPayment(false);
+            setIsOpenQRCode(false);
             window.location.href = "/orders-manager";
           }, 3000);
         } else {
@@ -392,20 +394,19 @@ export default function Cart() {
         open={isOpenPayment}
         onOpenChange={(open) => {
           setIsOpenPayment(open);
-
         }}
       >
-        <DialogContent className="w-full sm:w-2/5 max-w-[1200px] h-auto min-h-[250px] lg:min-h-[350px] 2xl:min-h-[600px] flex flex-col">
+        <DialogContent className="w-full sm:w-2/5 max-w-[1200px] h-auto min-h-[140px] flex flex-col" style={{width: 380, }}>
           <DialogHeader>
-            <DialogTitle>Verify Order</DialogTitle>
+            <DialogTitle>Payment Type</DialogTitle>
           </DialogHeader>
-          <h5 class="font-bold mt-4">Address Information</h5>
+          {/* <h5 class="font-bold mt-4">Address Information</h5>
           <Input
             placeholder="Enter Address"
             onChange={(e) => setAddress(e.target.value)}
             value={address}
-          />
-          <h5 class="font-bold">Payment Type</h5>
+          /> */}
+          {/* <h5 class="font-bold">Payment Type</h5> */}
           <div style={{ display: "flex", justifyContent: "flex-start" }}>
             <Button
               className="bg-red-600 hover:bg-red-500 mr-2 md:w-auto"

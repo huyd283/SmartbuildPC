@@ -18,15 +18,12 @@ import {
 import { formatNumber } from "@/service/convert/convertNumber";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip, InputNumber } from "antd";
-// import { Tooltip } from 'react-tooltip'
 import { listAllCate } from "@/service/Api-service/apiCategorys";
 
 export default function ProductSearch() {
   const pathname = usePathname();
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
   const [searchProduct, setSearchProduct] = useState("");
-  const [cateID, setCateID] = useState(urlParams.get("searchCate"));
+  const [cateID, setCateID] = useState("");
   const [cateSelected, setCateSelected] = useState();
   const [DataFilter, setDataFilter] = useState([]);
   const [startprice, setStartPrice] = useState("");
@@ -37,57 +34,55 @@ export default function ProductSearch() {
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   useEffect(() => {
+    // Chạy khi component mount và cateID thay đổi
     const fetchData = async () => {
-      const searchQuery = urlParams.get("query");
+      const queryString = window.location.search;
+      if (!queryString) return;
 
-      setSearchProduct(searchQuery);
-      if (searchQuery != null) {
+      const urlParams = new URLSearchParams(queryString);
+      const searchCate = urlParams.get("searchCate");
+
+      setCateID(searchCate || "");
+      const searchPro = await getDataProduct(searchCate);
+      setListSearchProduct(searchPro?.result || []);
+      
+      const searchBrand = await getBrandbyCate(searchCate);
+      setListBrand(searchBrand?.result || []);
+    };
+    fetchData();
+  }, [pathname]);
+
+  useEffect(() => {
+    // Lấy danh sách category và các tùy chọn khi cateID thay đổi
+    const fetchCateData = async () => {
+      if (cateID) {
+        const response = await FilterProducts(cateID);
+        setDataFilter(response.result || []);
+      } else {
+        const response = await listAllCate();
+        setListCate(response || []);
+      }
+    };
+    fetchCateData();
+  }, [cateID]);
+
+  useEffect(() => {
+    // Tìm kiếm sản phẩm dựa trên từ khóa tìm kiếm
+    const fetchSearchData = async () => {
+      if (searchProduct) {
         const body = {
           storeName: searchProduct,
           priceFrom: startprice,
           priceTo: endprice,
           category: cateID,
         };
-        const searchPro = await searchProductbyDes(searchQuery);
-        setListSearchProduct(searchPro?.result);
+        const searchPro = await searchProductbyDes(searchProduct);
+        setListSearchProduct(searchPro?.result || []);
       }
     };
-    fetchData();
-  }, [searchProduct]);
-  useEffect(() => {
-    const allCate = async () => {
-      const response = await listAllCate();
-      setListCate(response);
-    };
-    const getListOptionOfCate = async () => {
-      const response = await FilterProducts(cateID);
-      setDataFilter(response.result);
-    };
-    if (cateID) {
-      getListOptionOfCate();
-    } else {
-      allCate();
-    }
-  }, [cateID]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const queryString = window.location.search;
-      // Xử lý nếu query string không tồn tại
-      if (!queryString) {
-        return;
-      }
-      // Xử lý nếu query string có tồn tại
-      const urlParams = new URLSearchParams(queryString);
-      const searchQuery = urlParams.get("searchCate");
+    fetchSearchData();
+  }, [searchProduct, startprice, endprice, cateID]);
 
-      setCateID(searchQuery);
-      const searchPro = await getDataProduct(searchQuery);
-      setListSearchProduct(searchPro?.result);
-      const searchBrand = await getBrandbyCate(searchQuery);
-      setListBrand(searchBrand?.result);
-    };
-    fetchData();
-  }, [cateID]);
   const handleCheckboxChange = async (filterName, value) => {
     let newFilters = selectedFilters.filter(
       (filter) => Object.keys(filter)[0] !== filterName
@@ -100,61 +95,55 @@ export default function ProductSearch() {
       newFilters = [...newFilters, { [filterName]: value }];
     }
     setSelectedFilters(newFilters);
+
     const response = await getData({
       cate_id: cateID,
       filters: newFilters,
       smartbuild: [],
     });
-    setListSearchProduct(response?.result);
+    setListSearchProduct(response?.result || []);
   };
+
   const onChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    if (name == "startprice") {
+    const { name, value } = e.target;
+    if (name === "startprice") {
       setStartPrice(value);
-    }
-    if (name == "endprice") {
+    } else if (name === "endprice") {
       setEndPrice(value);
     }
   };
+
   const filterProduct = async () => {
-    if (cateID != null) {
-      const body = {
-        storeName: searchProduct,
-        priceFrom: startprice,
-        priceTo: endprice,
-        category: cateID,
-      };
-      const searchPro = await filterProducts(body);
-      setListSearchProduct(searchPro?.result);
-    } else {
-      const body = {
-        storeName: searchProduct,
-        priceFrom: startprice,
-        priceTo: endprice,
-      };
-      const searchPro = await filterProducts(body);
-      setListSearchProduct(searchPro?.result);
-    }
+    const body = {
+      storeName: searchProduct,
+      priceFrom: startprice,
+      priceTo: endprice,
+      category: cateID,
+    };
+    const searchPro = await filterProducts(body);
+    setListSearchProduct(searchPro?.result || []);
   };
 
   const searchbyBrand = async (name) => {
     const response = await getProductByBrandandCate(cateID, name);
-    setListSearchProduct(response);
+    setListSearchProduct(response || []);
   };
+
   const searchByCate = async (id) => {
     setCateSelected(id);
     const response = await getProductByNameandCate(searchProduct, id);
-    setListSearchProduct(response?.result);
+    setListSearchProduct(response?.result || []);
   };
+
   const searchByOpionCate = async () => {
     const response = await getData({
       cate_id: cateID,
       filters: selectedFilters,
       smartbuild: [],
     });
-    setListSearchProduct(response?.result);
+    setListSearchProduct(response?.result || []);
   };
+
 
   const showHeader =
     pathname === "/sign-in" || pathname === "/create-account" ? false : true;
@@ -314,7 +303,7 @@ export default function ProductSearch() {
                                 {/* <select style={{ width: '30%' }}>
                                                                     <option value="">Tình trạng kho hàng</option>
                                                                     <option value="in-stock">In Stock</option>
-                                                                    <option value="out-of-stock">Out of Stock</option>
+                                                                    <option value="out-of-stock">Deactivated</option>
                                                                 </select> */}
                                 {/* <select style={{ width: '30%' }}>
                                                                     <option value="">Tất cả kho</option>

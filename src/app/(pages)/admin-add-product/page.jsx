@@ -70,14 +70,14 @@ export default function AddProduct() {
     if (file && file.type === "image/jpeg") {
       setProductImage(file);
     } else {
-      alert("Chỉ được phép tải lên file JPG.");
+      alert("Only .jpg file");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!productImage) {
-      alert("Vui lòng chọn một ảnh sản phẩm.");
+      alert("Please choose a product image");
       return;
     }
 
@@ -100,7 +100,7 @@ export default function AddProduct() {
     try {
       let response = await createProduct(formData);
       if (response.statusCode === 200 || response.statusCode === 201) {
-        toast.success("Thêm sản phẩm thành công");
+        toast.success("Add Product Success");
       } else {
         console.log(response);
         // toast.error("Thêm sản phẩm thất bại!");
@@ -113,7 +113,7 @@ export default function AddProduct() {
         );
       }
     } catch (error) {
-      toast.error("Thêm sản phẩm thất bại!");
+      toast.error("Add Product Failed!");
       console.error("Error creating product:", error);
     }
   };
@@ -138,7 +138,7 @@ export default function AddProduct() {
             htmlFor="product-category"
             className="block text-primary font-semibold mb-2"
           >
-            Danh mục sản phẩm
+            Category
           </label>
           <select
             id="product-category"
@@ -147,7 +147,7 @@ export default function AddProduct() {
             onChange={(e) => setProductCategory(e.target.value)}
             required
           >
-            <option value="">Chọn danh mục</option>
+            <option value="">Select Category</option>
             {listCate.map((item) => (
               <option key={item.categoryId} value={item.categoryId}>
                 {item.categoryName}
@@ -200,13 +200,13 @@ export default function AddProduct() {
             htmlFor="product-name"
             className="block text-primary font-semibold mb-2"
           >
-            Tên sản phẩm
+            Product Name
           </label>
           <input
             type="text"
             id="product-name"
             className="w-full p-2 border border-border rounded"
-            placeholder="Enter tên sản phẩm"
+            placeholder="Enter product name"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             required
@@ -217,13 +217,13 @@ export default function AddProduct() {
             htmlFor="product-description"
             className="block text-primary font-semibold mb-2"
           >
-            Mô tả
+            Descriptions
           </label>
           <input
             type="text"
             id="product-description"
             className="w-full p-2 border border-border rounded"
-            placeholder="Enter mô tả"
+            placeholder="Enter product description"
             value={productDescription}
             onChange={(e) => setProductDescription(e.target.value)}
             required
@@ -234,13 +234,13 @@ export default function AddProduct() {
             htmlFor="product-price"
             className="block text-primary font-semibold mb-2"
           >
-            Giá sản phẩm
+            Product Price
           </label>
           <input
             type="number"
             id="product-price"
             className="w-full p-2 border border-border rounded"
-            placeholder="Enter giá"
+            placeholder="Enter product price"
             min={0}
             value={productPrice}
             onChange={(e) => setProductPrice(e.target.value)}
@@ -252,7 +252,7 @@ export default function AddProduct() {
             htmlFor="product-warranty"
             className="block text-primary font-semibold mb-2"
           >
-            Số tháng bảo hành (Months)
+            Warranty Period (Months)
           </label>
           <input
             type="number"
@@ -271,7 +271,7 @@ export default function AddProduct() {
             htmlFor="product-brand"
             className="block text-primary font-semibold mb-2"
           >
-            Thương hiệu
+            Brand
           </label>
           <input
             type="text"
@@ -314,8 +314,8 @@ export default function AddProduct() {
             onChange={(e) => setProductStatus(e.target.value)}
             required
           >
-            <option value={0}>Ngừng kinh doanh</option>
-            <option value={1}>Đang kinh doanh</option>
+            <option value={0}>Deactivated</option>
+            <option value={1}>Available</option>
           </select>
         </div>
         <div className="mb-4">
@@ -323,13 +323,13 @@ export default function AddProduct() {
             htmlFor="product-store"
             className="block text-primary font-semibold mb-2"
           >
-            Số lượng
+            Quantity
           </label>
           <input
             type="number"
             id="product-store"
             className="w-full p-2 border border-border rounded"
-            placeholder="Enter số lượng"
+            placeholder="Enter quantity"
             value={productQuantity}
             onChange={(e) => setProductQuantity(e.target.value)}
             required
@@ -340,7 +340,7 @@ export default function AddProduct() {
             htmlFor="product-image"
             className="block text-primary font-semibold mb-2"
           >
-            Hình ảnh sản phẩm
+            Product Image
           </label>
           <input
             type="file"
@@ -355,7 +355,7 @@ export default function AddProduct() {
           type="submit"
           className="p-2 bg-green-600 text-white font-semibold rounded hover:bg-green-400"
         >
-          Thêm sản phẩm
+          Add Product
         </button>
       </form>
     </div>

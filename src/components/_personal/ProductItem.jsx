@@ -127,7 +127,7 @@ export default function ProductItem({
               height={100}
               className="w-full h-full bg-center bg-contain"
               preview={false}
-        />
+            />
           </Link>
           <div className="w-full flex flex-col flex-1 py-2 px-3 text-sm gap-y-2">
             <h4 className="font-bold text-[#222] uppercase">
@@ -136,7 +136,7 @@ export default function ProductItem({
             <div>
               {item.status === 0 || item.quantity === 0 ? (
                 <span className="text-red-600 bg-[#efd0d0cc] font-semibold p-1 rounded-sm">
-                  Out of Stock
+                  Deactivated
                 </span>
               ) : (
                 <span className="text-[#026db5] bg-[#0093623d] font-semibold p-1 rounded-sm">
