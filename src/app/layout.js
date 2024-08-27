@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
           <div className="min-h-[58vh]">
             {children}
           </div>
-          <ChatBox />
+          {/* <ChatBox /> */}
           <Footer />
           <BackToTop />
         </StoreProvider>

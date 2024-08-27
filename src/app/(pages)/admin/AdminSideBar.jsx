@@ -31,10 +31,14 @@ export default function AdminSidebar() {
     const response = JSON.parse(localStorage.getItem("currentUser"));
     if (response) {
       const decodedToken = jwtDecode(response.tokenInformation.accessToken);
-      setRole(decodedToken.role); // Cập nhật role vào state
+      const userRole = decodedToken?.role;  
+      setRole(userRole);  
+      if (userRole === "CUSTOMER") { 
+        window.location.href = "/";  
+      }
     }
   };
-
+  
   useEffect(() => {
     checkRole();
   }, []);

@@ -285,15 +285,15 @@ export default function BuildConfig() {
           </h4>
         </div>
         <div className="w-full grid gap-4">
-          <div className="flex justify-start gap-x-2">
+          <div className="flex justify-between gap-x-2">
             <Button
-              className="bg-slate-600 hover:bg-slate-500 uppercase"
+              className="bg-red-600 hover:bg-red-500 uppercase"
               onClick={handleGamingInputClick}
             >
               Gaming
             </Button>
             <Button
-              className="bg-slate-600 hover:bg-slate-500 uppercase"
+              className="bg-red-600 hover:bg-red-500 uppercase"
               onClick={handleVideoEditorInputClick}
             >
               Video Editing
@@ -308,8 +308,8 @@ export default function BuildConfig() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
-              <Button onClick={callChatGPT}>OK</Button>
-            </div>
+              <Button className="bg-green-600 hover:bg-green-500 uppercase" onClick={callChatGPT}>PREVIEW</Button>
+              </div>
           )}
           {showVideoEditorInput && (
             <div>
@@ -320,11 +320,11 @@ export default function BuildConfig() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
-              <Button onClick={callChatGPT}>OK</Button>
+              <Button className="bg-green-600 hover:bg-green-500 uppercase" onClick={callChatGPT}>PREVIEW</Button>
             </div>
           )}
         </div>
-        {data && (
+        {data && data !== 'null' && (
           <div
             dangerouslySetInnerHTML={{
               __html: renderHTML(data),
