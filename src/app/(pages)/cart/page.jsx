@@ -74,6 +74,8 @@ export default function Cart() {
   }, []);
 
   const updateCookie = (items) => {
+    console.log(JSON.stringify(items));
+    
     Cookies.set("selectedItem", encodeURIComponent(JSON.stringify(items)), {
       expires: 7,
     });
@@ -390,11 +392,7 @@ export default function Cart() {
         open={isOpenPayment}
         onOpenChange={(open) => {
           setIsOpenPayment(open);
-          // if (open) {
-          //   handleClickSelect(false);
-          // } else {
-          //   setIsOpenPayment(false);
-          // }
+
         }}
       >
         <DialogContent className="w-full sm:w-2/5 max-w-[1200px] h-auto min-h-[250px] lg:min-h-[350px] 2xl:min-h-[600px] flex flex-col">

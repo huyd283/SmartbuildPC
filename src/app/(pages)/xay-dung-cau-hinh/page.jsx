@@ -284,53 +284,56 @@ export default function BuildConfig() {
             Total Price: {formatCurrency(totalPrice)}
           </h4>
         </div>
-        <div className="w-full grid gap-4">
-          <div className="flex justify-between gap-x-2">
-            <Button
-              className="bg-red-600 hover:bg-red-500 uppercase"
+        <div className="flex justify-between">
+          <div className="">
+            <button
               onClick={handleGamingInputClick}
+              className="bg-red-500 hover:bg-red-700 text-white p-3 uppercase rounded"
             >
-              Gaming
-            </Button>
-            <Button
-              className="bg-red-600 hover:bg-red-500 uppercase"
-              onClick={handleVideoEditorInputClick}
-            >
-              Video Editing
-            </Button>
+              GAMING
+            </button>
+            {showGamingInput && (
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Enter gaming input"
+                className="ml-2 p-2 border rounded"
+              />
+            )}
           </div>
-          {showGamingInput && (
-            <div>
+          <div>
+            {showVideoEditorInput && (
               <input
                 type="text"
-                className="border rounded-md px-3 py-2"
-                placeholder="Enter your favorite game"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Enter video editor input"
+                className="ml-2 p-2 border rounded"
               />
-              <Button className="bg-green-600 hover:bg-green-500 uppercase" onClick={callChatGPT}>PREVIEW</Button>
-              </div>
-          )}
-          {showVideoEditorInput && (
-            <div>
-              <input
-                type="text"
-                className="border rounded-md px-3 py-2"
-                placeholder="Enter the software you use for video editing"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-              <Button className="bg-green-600 hover:bg-green-500 uppercase" onClick={callChatGPT}>PREVIEW</Button>
-            </div>
-          )}
+            )}
+            <button
+              onClick={handleVideoEditorInputClick}
+              className="bg-red-500 hover:bg-red-700 text-white p-3 uppercase rounded"
+            >
+              graphic design
+            </button>
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <button
+            onClick={callChatGPT}
+            className="bg-green-500 text-white p-3 rounded"
+          >
+            PREVIEW PERFORMANCE TEST
+          </button>
         </div>
         {data && data !== 'null' && (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: renderHTML(data),
-            }}
-          />
-        )}
+              <div
+              className="p-4 bg-gray-100 border border-gray-300 rounded"
+              dangerouslySetInnerHTML={{ __html: renderHTML(data) }}
+            />
+            )}
       </div>
     </div>
   );

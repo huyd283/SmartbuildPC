@@ -116,7 +116,6 @@ export default function ConfigItem({
         selectedCategoryIds.includes(3) &&
         (selectedCategoryIds.includes(4) || selectedCategoryIds.includes(5))
       ) {
-        console.log("ủa alooooo");
         setIsDialogOpen(true);
       } else {
         if(notice)

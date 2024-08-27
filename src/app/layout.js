@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
         <Toaster position="bottom-center" reverseOrder={false} />
         <StoreProvider>
           <Header />
-          <div className="min-h-[58vh]">
+          <div className="mt-28 min-h-[58vh]">
             {children}
           </div>
           {/* <ChatBox /> */}
