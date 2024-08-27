@@ -119,7 +119,6 @@ export default function Account() {
   return (
     <div
       className="p-4 bg-card text-card-foreground bg-slate-100"
-      style={{ marginLeft: "256px" }}
     >
       <h2 className="text-xl font-semibold mb-4">List Account</h2>
 

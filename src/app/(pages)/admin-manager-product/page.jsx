@@ -175,7 +175,6 @@ export default function Product() {
   return (
     <div
       className="p-4 bg-card text-card-foreground bg-slate-100"
-      style={{ marginLeft: "256px" }}
     >
       <div className="flex justify-between mb-4">
         <h2 className="text-xl font-semibold">Danh Sách Sản Phẩm</h2>

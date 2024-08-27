@@ -61,7 +61,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="container ml-64" >
+    <div className="container p-4" >
       <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* Info Cards */}

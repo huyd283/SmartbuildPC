@@ -131,7 +131,7 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="p-6 mx-auto overflow-auto bg-card text-card-foreground rounded-lg shadow-md ml-64">
+    <div className="p-4 mx-auto overflow-auto bg-card text-card-foreground rounded-lg shadow-md ">
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label

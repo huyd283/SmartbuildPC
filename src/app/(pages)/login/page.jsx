@@ -24,7 +24,7 @@ export default function Login() {
         toast.success(response.message);
         localStorage.setItem('currentUser', JSON.stringify(response));
         if(decodedToken?.role == "ADMIN" || decodedToken?.role == "STAFF"){
-          window.location.href = '/admin-add-product';
+          window.location.href = '/admin-dashboard';
         } else {
           window.location.href = '/';
          }

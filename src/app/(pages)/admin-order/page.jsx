@@ -100,7 +100,6 @@ export default function Widget() {
     } catch (error) {
       console.error("Error approving order:", error);
     }
-    
   };
 
   const handleDone = async (orderID) => {
@@ -115,7 +114,7 @@ export default function Widget() {
   };
 
   return (
-    <div className="p-6 bg-background ml-64">
+    <div className="p-6 bg-background ">
       <h2 className="text-2xl font-semibold mb-4">Order List</h2>
       <div className="flex space-x-4 mb-6">
         <button
