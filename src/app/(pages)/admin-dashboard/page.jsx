@@ -61,7 +61,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="container mx-auto p-10">
+    <div className="container ml-64" >
       <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* Info Cards */}
@@ -80,7 +80,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Pie Chart */}
       <div className="w-1/2 mx-auto">
         <Pie data={data} options={options} />
       </div>

@@ -1,5 +1,10 @@
 "use client";
-import { ApproveOrder, CancelOrder, DoneOrder, SendBill } from "@/service/Api-service/apiOrders";
+import {
+  ApproveOrder,
+  CancelOrder,
+  DoneOrder,
+  SendBill,
+} from "@/service/Api-service/apiOrders";
 import { useEffect, useState } from "react";
 import {
   Collapsible,
@@ -27,18 +32,17 @@ export default function Widget() {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [orderStatus, setOrderStatus] = useState("All");
   const [openOrderId, setOpenOrderId] = useState(null);
-  const xuatFile = async(orderId) => {
+  const xuatFile = async (orderId) => {
     const body = {
-      "orderId": orderId,
-      "billDate": "2024-08-18T17:02:52.368Z",
-      "taxIn": 0,
-      "address": ""
-    }
-   const response =  await createBill(body);
-   const responseexport = await exportBill(response.result)
-   await downloadTxtFile(responseexport)
-   
-}
+      orderId: orderId,
+      billDate: "2024-08-18T17:02:52.368Z",
+      taxIn: 0,
+      address: "",
+    };
+    const response = await createBill(body);
+    const responseexport = await exportBill(response.result);
+    await downloadTxtFile(responseexport);
+  };
   const fetchData = async () => {
     try {
       const res = await getListOrdersAdmin();
@@ -90,8 +94,8 @@ export default function Widget() {
         orderID: orderID,
         orderStatus: "APPROVED",
       };
-      const res = await ApproveOrder(data); 
-      xuatFile(orderID)
+      const res = await ApproveOrder(data);
+      xuatFile(orderID);
       fetchData();
     } catch (error) {
       console.error("Error approving order:", error);
@@ -101,9 +105,8 @@ export default function Widget() {
 
   const handleDone = async (orderID) => {
     try {
-      
-      const resDone = await DoneOrder(orderID); 
-      const resBill = await SendBill(orderID); 
+      const resDone = await DoneOrder(orderID);
+      const resBill = await SendBill(orderID);
       // toast.success(resBill.message)
       fetchData();
     } catch (error) {
@@ -185,16 +188,15 @@ export default function Widget() {
                 </button>
               </CollapsibleTrigger>
               {order.orderStatus === "DONE" && (
-                  <CollapsibleTrigger asChild>
+                <CollapsibleTrigger asChild>
                   <button
-                      className="bg-blue-500 text-primary-foreground p-2 rounded text-center"
-                      onClick={() => xuatFile(order.orderID)}
-                    >
-                      Xuất file
-                    </button>
-                  </CollapsibleTrigger>
-                )}
-              
+                    className="bg-blue-500 text-primary-foreground p-2 rounded text-center"
+                    onClick={() => xuatFile(order.orderID)}
+                  >
+                    Xuất file
+                  </button>
+                </CollapsibleTrigger>
+              )}
             </div>
             <CollapsibleContent asChild>
               <div>

@@ -155,3 +155,29 @@ export const FilterProducts = async (id) => {
     return error;
   }
 };
+export const generateQrCode = async (id) => {
+  try {
+    const response = await jwtInterceptor("Transaction/GenerateQrCode/" + id);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return error;
+  }
+};
+export const checkPaymentOrGenerateQrCode = async (id) => {
+  try {
+    const response = await jwtInterceptor(
+      "Transaction/CheckPaymentOrGenerateQrCode/" + id
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return error;
+  }
+};
