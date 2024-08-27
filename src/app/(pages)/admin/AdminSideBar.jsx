@@ -46,6 +46,7 @@ export default function AdminSidebar() {
           <div>
             <ul className="flex list-none flex-col w-full">
               <hr className="my-4 w-full" />
+              
               <span className="mr-2 block pb-4 pt-1 text-sm font-bold uppercase text-info w-full">
                 Sản phẩm
               </span>
